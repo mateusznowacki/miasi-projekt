@@ -26,12 +26,12 @@ Instructions for AI agents working in this React app.
 src/
   features/           # feature modules
     <feature>/
-      components/
-      hooks/
-      api/
+      pages/            # route-level page components
+      components/       # feature UI building blocks
+      api/              # fetch/post functions and TanStack Query/Mutation hooks
+      types/            # feature-specific interfaces and types
   shared/             # code used by 2+ features
     components/
-    hooks/
     api/
   components/
     ui/               # shadcn primitives only
@@ -41,7 +41,10 @@ src/
 
 ### Placement rules
 
-- **Feature-first** — components, hooks, and API logic belong in the owning `features/<name>/` folder
+- **Feature-first** — pages, components, and API logic belong in the owning `features/<name>/` folder
+- **`pages/`** — route-level page components; imported by thin route files in `src/routes/`
+- **`components/`** — smaller UI pieces used by pages (not route entry points)
+- **`types/`** — feature-specific `interface` and `type` definitions (one per file, kebab-case)
 - **`shared/`** — only when used by **two or more features**
 - **`components/ui/`** — shadcn/Radix primitives; extend via variants, do not duplicate
 - **`routes/`** — thin route wiring only (see Routing)
@@ -57,7 +60,7 @@ Example:
 
 ```tsx
 // src/routes/dashboard.tsx
-import { DashboardPage } from "@/features/dashboard/components/dashboard-page";
+import { DashboardPage } from "@/features/dashboard/pages/dashboard-page";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/dashboard")({
@@ -75,14 +78,14 @@ export const Route = createFileRoute("/dashboard")({
 
 ### Server data (React Query)
 
-- All API calls go through TanStack Query hooks in `features/*/hooks/` or `shared/hooks/`
+- All API calls go through TanStack Query hooks in `features/*/api/` or `shared/api/`
 - Components consume `isPending`, `isError`, and `error` from those hooks
 - Do not call `fetch` directly in components
 
 ### Mock API (current phase)
 
 - Mock responses live in `features/<name>/api/` until Hey API is integrated
-- Shape mocks to match future API contracts (`interface` + Zod where useful)
+- Shape mocks to match types in `features/<name>/types/` (`interface` + Zod where useful)
 
 ## React patterns
 
@@ -111,12 +114,9 @@ export default function UserProfile() { ... }
 
 ### Custom hooks
 
-Extract a hook when:
+**API hooks** (`useQuery`, `useMutation`) live in `features/<name>/api/` next to fetch/post functions.
 
-- Logic is reused in two or more places, or
-- A component is complex enough that extraction improves readability
-
-Place hooks in the owning feature: `features/<name>/hooks/`
+**UI hooks** (non-API logic) — extract when reused or when a component is complex enough to improve readability. Colocate in the owning feature folder (e.g. `features/<name>/components/` or a dedicated file alongside related components).
 
 ## Exports & imports
 
