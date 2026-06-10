@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: MiASI
+  datasource:
+    url: jdbc:postgresql://localhost:5432/miasi
+    driver-class-name: org.postgresql.Driver
+    username: miasi
+    password: miasi
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: public
+        hbm2ddl:
+          create_namespaces: true
