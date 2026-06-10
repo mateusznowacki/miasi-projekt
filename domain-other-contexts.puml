@@ -1,0 +1,156 @@
+@startuml
+left to right direction
+skinparam defaultTextAlignment center
+
+' --- STYLE DDD ---
+skinparam class {
+    BackgroundColor<<usługa aplikacji>> #FFF2CC
+    BorderColor<<usługa aplikacji>> #D6B656
+    
+    BackgroundColor<<encja>> #DAE8FC
+    BorderColor<<encja>> #6C8EBF
+    
+    BackgroundColor<<encja — korzeń agregatu>> #DAE8FC
+    BorderColor<<encja — korzeń agregatu>> #6C8EBF
+    
+    BackgroundColor<<obiekt wartości>> #D5E8D4
+    BorderColor<<obiekt wartości>> #82B366
+    
+    BackgroundColor<<zdarzenie dziedziny>> #FFE6CC
+    BorderColor<<zdarzenie dziedziny>> #D79B00
+}
+
+hide empty members
+
+' ==========================================
+' KONTEKST 1: DOKUMENTACJA MEDYCZNA
+' ==========================================
+package "«Kontekst Dokumentacja Medyczna» - Dziedzina Główna" <<Rectangle>> {
+    
+    class "WypelnienieRekorduMedycznego" <<usługa aplikacji>>
+    class "AktualizacjaRekordu" <<usługa aplikacji>>
+    class "PrzegladanieDokumentacji" <<usługa aplikacji>>
+
+    class "RekordMedyczny" <<encja>> {
+      - RekordId
+      - WizytaId
+      - PacjentId
+      - LekarzId
+      - notatki
+      + utworz()
+      + aktualizuj()
+    }
+
+    class "Diagnoza" <<obiekt wartości>>
+    class "Objaw" <<obiekt wartości>>
+    class "Recepta" <<obiekt wartości>>
+    class "Zalecenie" <<obiekt wartości>>
+
+    class "RekordMedycznyUtworzony" <<zdarzenie dziedziny>>
+    class "RekordMedycznyZaktualizowany" <<zdarzenie dziedziny>>
+
+    ' Relacje w Kontekście 1
+    WypelnienieRekorduMedycznego ..> RekordMedyczny : <<use>>
+    AktualizacjaRekordu ..> RekordMedyczny : <<use>>
+    PrzegladanieDokumentacji ..> RekordMedyczny : <<use>>
+
+    RekordMedyczny *-- Diagnoza
+    RekordMedyczny *-- Objaw
+    RekordMedyczny *-- Recepta
+    RekordMedyczny *-- Zalecenie
+
+    RekordMedyczny ..> RekordMedycznyUtworzony : <<create>>
+    RekordMedyczny ..> RekordMedycznyZaktualizowany : <<create>>
+}
+
+' ==========================================
+' KONTEKST 2: PLACÓWKA
+' ==========================================
+package "«Kontekst Placówka» - Pomocnicza" <<Rectangle>> {
+    class "Placowka" <<encja>> {
+      - PlacowkaId
+      + dodajOddzial()
+      + dodajGabinet()
+    }
+    class "Oddzial" <<encja>> {
+      - OddzialId
+      - nazwa
+    }
+    class "Gabinet" <<encja>> {
+      - GabinetId
+    }
+
+    class "Adres" as AdresPlacowka <<obiekt wartości>>
+    class "NazwaPlacowki" <<obiekt wartości>>
+    class "Lokalizacja\n(budynek, piętro, numer)" as Lokalizacja <<obiekt wartości>>
+
+    ' Relacje w Kontekście 2
+    Placowka *-- AdresPlacowka
+    Placowka *-- NazwaPlacowki
+    Placowka *-- "1..*" Oddzial
+    Oddzial *-- "1..*" Gabinet
+    Gabinet *-- Lokalizacja
+}
+
+' ==========================================
+' KONTEKST 3: PERSONEL
+' ==========================================
+package "«Kontekst Personel» - Pomocnicza" <<Rectangle>> {
+    class "Lekarz" <<encja>> {
+      - LekarzId
+      - PlacowkaId
+      - OddzialId
+      - GabinetId
+    }
+    class "PracownikAdministracyjny" <<encja>> {
+      - PracownikId
+      - PlacowkaId
+    }
+
+    class "Specjalizacja" <<obiekt wartości>>
+    class "ImienNazwisko" as ImieNazwiskoLekarz <<obiekt wartości>>
+    class "Stanowisko" <<obiekt wartości>>
+    class "ImienNazwisko" as ImieNazwiskoPracownik <<obiekt wartości>>
+
+    ' Relacje w Kontekście 3
+    Lekarz *-- Specjalizacja
+    Lekarz *-- ImieNazwiskoLekarz
+    PracownikAdministracyjny *-- Stanowisko
+    PracownikAdministracyjny *-- ImieNazwiskoPracownik
+}
+
+' ==========================================
+' KONTEKST 4: IAM (TOŻSAMOŚĆ I DOSTĘP)
+' ==========================================
+package "«Kontekst Tożsamość i Dostęp (IAM)» - Generyczna" <<Rectangle>> {
+    class "Konto" <<encja — korzeń agregatu>> {
+      - KontoId
+      - hasloHash (atrybut techn.)
+      + zaloguj()
+      + wyloguj()
+      + zarejestruj()
+      + aktualizujDane()
+      + zarzadzajZgodami()
+    }
+
+    class "Email" <<obiekt wartości>>
+    class "ImienNazwisko" as ImieNazwiskoIAM <<obiekt wartości>>
+    class "Rola" <<obiekt wartości>>
+    class "Adres" as AdresIAM <<obiekt wartości>>
+    class "Telefon" <<obiekt wartości>>
+    class "PESEL" <<obiekt wartości>>
+    class "Zgoda" <<obiekt wartości>>
+    class "Token" <<obiekt wartości>>
+
+    ' Relacje w Kontekście 4
+    Konto *-- "1" Email
+    Konto *-- ImieNazwiskoIAM
+    Konto *-- "1" Rola
+    Konto *-- "0..1" AdresIAM
+    Konto *-- "0..1" Telefon
+    Konto *-- "0..1" PESEL
+    Konto *-- "*" Zgoda
+    Konto *-- "0..1" Token
+}
+
+@enduml

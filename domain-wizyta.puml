@@ -1,0 +1,88 @@
+@startuml
+left to right direction
+skinparam defaultTextAlignment center
+
+' Definicja stylów dla poszczególnych elementów DDD
+skinparam class {
+    BackgroundColor<<usługa aplikacji>> #FFF2CC
+    BorderColor<<usługa aplikacji>> #D6B656
+    
+    BackgroundColor<<encja>> #DAE8FC
+    BorderColor<<encja>> #6C8EBF
+    
+    BackgroundColor<<obiekt wartości>> #D5E8D4
+    BorderColor<<obiekt wartości>> #82B366
+    
+    BackgroundColor<<zdarzenie dziedziny>> #FFE6CC
+    BorderColor<<zdarzenie dziedziny>> #D79B00
+}
+
+hide empty members
+
+' --- Usługi Aplikacji ---
+class "PrzegladanieWizyt" <<usługa aplikacji>>
+class "AnulowanieWizyty" <<usługa aplikacji>>
+class "RezerwacjaWizyty" <<usługa aplikacji>>
+class "PrzegladanieSlotow" <<usługa aplikacji>>
+class "ZarzadzanieKalendarzem" <<usługa aplikacji>>
+
+' --- Encje (Agregaty) ---
+class "Wizyta" <<encja>> {
+  - WizytaId
+  - PacjentId
+  - LekarzId
+  - sloty: SlotId [1..*]
+  + zarezerwuj()
+  + anuluj()
+  + zakoncz()
+}
+
+class "Harmonogram" <<encja>> {
+  - HarmonogramId
+  - LekarzId
+  + dodajTerminy()
+  + zarezerwujSloty()
+  + zwolnijSloty()
+}
+
+class "Slot" <<encja>> {
+  - SlotId
+}
+
+' --- Obiekty Wartości ---
+class "StatusWizyty" <<obiekt wartości>>
+class "TypKonsultacji" <<obiekt wartości>>
+class "OkresCzasu" <<obiekt wartości>>
+class "StanSlotu" <<obiekt wartości>>
+
+' --- Zdarzenia Dziedziny ---
+class "WizytaZarezerwowana" <<zdarzenie dziedziny>>
+class "WizytaAnulowana" <<zdarzenie dziedziny>>
+class "WizytaZakonczona" <<zdarzenie dziedziny>>
+class "SlotZwolniony" <<zdarzenie dziedziny>>
+
+' --- Relacje: Usługi -> Encje ---
+PrzegladanieWizyt ..> Wizyta : <<use>>
+AnulowanieWizyty ..> Wizyta : <<use>>
+RezerwacjaWizyty ..> Wizyta : <<use>>
+RezerwacjaWizyty ..> Harmonogram : <<use>>
+PrzegladanieSlotow ..> Harmonogram : <<use>>
+ZarzadzanieKalendarzem ..> Harmonogram : <<use>>
+
+' --- Relacje: Kompozycja (Encje -> Obiekty Wartości / Pod-encje) ---
+Wizyta *-- StatusWizyty
+Wizyta *-- TypKonsultacji
+
+Harmonogram *-- "1..*" Slot
+
+Slot *-- OkresCzasu
+Slot *-- StanSlotu
+
+' --- Relacje: Tworzenie Zdarzeń Dziedziny ---
+Wizyta ..> WizytaZarezerwowana : <<create>>
+Wizyta ..> WizytaAnulowana : <<create>>
+Wizyta ..> WizytaZakonczona : <<create>>
+
+Harmonogram ..> SlotZwolniony : <<create>>
+
+@enduml

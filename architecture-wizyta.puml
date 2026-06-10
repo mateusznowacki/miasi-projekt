@@ -1,0 +1,73 @@
+@startuml
+skinparam defaultTextAlignment center
+skinparam rectangle {
+    BackgroundColor<<Adapter>> #FFF2CC
+    BackgroundColor<<Port>> #FFFFFF
+    BorderColor<<Port>> #800080
+    BackgroundColor<<External>> #F2F2F2
+}
+
+title Architektura heksagonalna - moduł «Kontekst Wizyta»
+
+left to right direction
+
+' --- Klienci (Lewa strona / Driving) ---
+rectangle "Klient UI" <<External>> as ClientUI
+rectangle "Inne moduły\n(zdarzenia dziedziny)" <<External>> as ExternalModules
+
+' --- Adaptery Wejściowe (Driving Adapters) ---
+rectangle "<<adapter wejściowy>>\nKontroler REST" <<Adapter>> as RestAdapter
+rectangle "<<adapter wejściowy>>\nSłuchacz zdarzeń" <<Adapter>> as EventAdapter
+
+' --- Rdzeń Aplikacji (Heksagon) ---
+rectangle "RDZEŃ • Warstwa aplikacji\nusługi aplikacyjne • porty" #E6F0FF {
+
+    rectangle "<<port>>\nRezerwacjaWizyty /\nAnulowanieWizyty" <<Port>> as InPort1
+    rectangle "<<port>>\nOdbiór zdarzeń" <<Port>> as InPort2
+
+    rectangle "Warstwa dziedziny\n**Wizyta • Harmonogram**\nencje • obiekty wartości • zdarzenia" #E2EED9 as DomainCore
+
+    rectangle "<<port wyjściowy>>\nTożsamość" <<Port>> as OutPort1
+    rectangle "<<port wyjściowy>>\nRepozytorium" <<Port>> as OutPort2
+    rectangle "<<port wyjściowy>>\nBrama Placówki" <<Port>> as OutPort3
+    rectangle "<<port wyjściowy>>\nBrama Personelu" <<Port>> as OutPort4
+    
+    ' Ukryte relacje do ułożenia widoku centralnego dziedziny
+    InPort1 -[hidden]-> DomainCore
+    InPort2 -[hidden]-> DomainCore
+    DomainCore -[hidden]-> OutPort1
+    DomainCore -[hidden]-> OutPort2
+    DomainCore -[hidden]-> OutPort3
+    DomainCore -[hidden]-> OutPort4
+}
+
+' --- Adaptery Wyjściowe (Driven Adapters) ---
+rectangle "<<adapter / ACL>>\nTożsamość" <<Adapter>> as OutAdapter1
+rectangle "<<adapter wyjściowy>>\nTrwałość (Repozytorium)" <<Adapter>> as OutAdapter2
+rectangle "<<adapter>>\nBrama Placówki" <<Adapter>> as OutAdapter3
+rectangle "<<adapter>>\nBrama Personelu" <<Adapter>> as OutAdapter4
+
+' --- Zewnętrzne systemy (Prawa strona / Driven) ---
+rectangle "Moduł IAM\n(UOH + JO)" <<External>> as ExtIAM
+rectangle "Baza danych\n(schemat Medyczny)" <<External>> as ExtDB
+rectangle "Moduł Placówki" <<External>> as ExtPlacowka
+rectangle "Moduł Personelu" <<External>> as ExtPersonel
+
+' --- Relacje przepływu sterowania ---
+ClientUI -> RestAdapter : REST / HTTP
+ExternalModules -> EventAdapter
+
+RestAdapter -> InPort1
+EventAdapter -> InPort2
+
+OutPort1 -> OutAdapter1
+OutPort2 -> OutAdapter2
+OutPort3 -> OutAdapter3
+OutPort4 -> OutAdapter4
+
+OutAdapter1 -> ExtIAM
+OutAdapter2 -> ExtDB
+OutAdapter3 -> ExtPlacowka
+OutAdapter4 -> ExtPersonel
+
+@enduml
