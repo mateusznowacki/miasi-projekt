@@ -9,68 +9,435 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestRouteImport } from './routes/test'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppProfileRouteImport } from './routes/_app/profile'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppStaffIndexRouteImport } from './routes/_app/staff/index'
+import { Route as AppScheduleIndexRouteImport } from './routes/_app/schedule/index'
+import { Route as AppPatientsIndexRouteImport } from './routes/_app/patients/index'
+import { Route as AppAppointmentsIndexRouteImport } from './routes/_app/appointments/index'
+import { Route as AppStaffNewRouteImport } from './routes/_app/staff/new'
+import { Route as AppScheduleDoctorIdRouteImport } from './routes/_app/schedule/$doctorId'
+import { Route as AppAppointmentsNewRouteImport } from './routes/_app/appointments/new'
+import { Route as AppAppointmentsIdRouteImport } from './routes/_app/appointments/$id'
+import { Route as AppStaffIdIndexRouteImport } from './routes/_app/staff/$id/index'
+import { Route as AppPatientsIdIndexRouteImport } from './routes/_app/patients/$id/index'
+import { Route as AppStaffIdEditRouteImport } from './routes/_app/staff/$id/edit'
+import { Route as AppPatientsIdMedicalRouteImport } from './routes/_app/patients/$id/medical'
+import { Route as AppPatientsIdEditRouteImport } from './routes/_app/patients/$id/edit'
 
-const TestRoute = TestRouteImport.update({
-  id: '/test',
-  path: '/test',
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStaffIndexRoute = AppStaffIndexRouteImport.update({
+  id: '/staff/',
+  path: '/staff/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppScheduleIndexRoute = AppScheduleIndexRouteImport.update({
+  id: '/schedule/',
+  path: '/schedule/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPatientsIndexRoute = AppPatientsIndexRouteImport.update({
+  id: '/patients/',
+  path: '/patients/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAppointmentsIndexRoute = AppAppointmentsIndexRouteImport.update({
+  id: '/appointments/',
+  path: '/appointments/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStaffNewRoute = AppStaffNewRouteImport.update({
+  id: '/staff/new',
+  path: '/staff/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppScheduleDoctorIdRoute = AppScheduleDoctorIdRouteImport.update({
+  id: '/schedule/$doctorId',
+  path: '/schedule/$doctorId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAppointmentsNewRoute = AppAppointmentsNewRouteImport.update({
+  id: '/appointments/new',
+  path: '/appointments/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAppointmentsIdRoute = AppAppointmentsIdRouteImport.update({
+  id: '/appointments/$id',
+  path: '/appointments/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStaffIdIndexRoute = AppStaffIdIndexRouteImport.update({
+  id: '/staff/$id/',
+  path: '/staff/$id/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPatientsIdIndexRoute = AppPatientsIdIndexRouteImport.update({
+  id: '/patients/$id/',
+  path: '/patients/$id/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStaffIdEditRoute = AppStaffIdEditRouteImport.update({
+  id: '/staff/$id/edit',
+  path: '/staff/$id/edit',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPatientsIdMedicalRoute = AppPatientsIdMedicalRouteImport.update({
+  id: '/patients/$id/medical',
+  path: '/patients/$id/medical',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPatientsIdEditRoute = AppPatientsIdEditRouteImport.update({
+  id: '/patients/$id/edit',
+  path: '/patients/$id/edit',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/test': typeof TestRoute
+  '/': typeof AppIndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/profile': typeof AppProfileRoute
+  '/appointments/$id': typeof AppAppointmentsIdRoute
+  '/appointments/new': typeof AppAppointmentsNewRoute
+  '/schedule/$doctorId': typeof AppScheduleDoctorIdRoute
+  '/staff/new': typeof AppStaffNewRoute
+  '/appointments/': typeof AppAppointmentsIndexRoute
+  '/patients/': typeof AppPatientsIndexRoute
+  '/schedule/': typeof AppScheduleIndexRoute
+  '/staff/': typeof AppStaffIndexRoute
+  '/patients/$id/edit': typeof AppPatientsIdEditRoute
+  '/patients/$id/medical': typeof AppPatientsIdMedicalRoute
+  '/staff/$id/edit': typeof AppStaffIdEditRoute
+  '/patients/$id/': typeof AppPatientsIdIndexRoute
+  '/staff/$id/': typeof AppStaffIdIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/test': typeof TestRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/profile': typeof AppProfileRoute
+  '/': typeof AppIndexRoute
+  '/appointments/$id': typeof AppAppointmentsIdRoute
+  '/appointments/new': typeof AppAppointmentsNewRoute
+  '/schedule/$doctorId': typeof AppScheduleDoctorIdRoute
+  '/staff/new': typeof AppStaffNewRoute
+  '/appointments': typeof AppAppointmentsIndexRoute
+  '/patients': typeof AppPatientsIndexRoute
+  '/schedule': typeof AppScheduleIndexRoute
+  '/staff': typeof AppStaffIndexRoute
+  '/patients/$id/edit': typeof AppPatientsIdEditRoute
+  '/patients/$id/medical': typeof AppPatientsIdMedicalRoute
+  '/staff/$id/edit': typeof AppStaffIdEditRoute
+  '/patients/$id': typeof AppPatientsIdIndexRoute
+  '/staff/$id': typeof AppStaffIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/test': typeof TestRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/profile': typeof AppProfileRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/appointments/$id': typeof AppAppointmentsIdRoute
+  '/_app/appointments/new': typeof AppAppointmentsNewRoute
+  '/_app/schedule/$doctorId': typeof AppScheduleDoctorIdRoute
+  '/_app/staff/new': typeof AppStaffNewRoute
+  '/_app/appointments/': typeof AppAppointmentsIndexRoute
+  '/_app/patients/': typeof AppPatientsIndexRoute
+  '/_app/schedule/': typeof AppScheduleIndexRoute
+  '/_app/staff/': typeof AppStaffIndexRoute
+  '/_app/patients/$id/edit': typeof AppPatientsIdEditRoute
+  '/_app/patients/$id/medical': typeof AppPatientsIdMedicalRoute
+  '/_app/staff/$id/edit': typeof AppStaffIdEditRoute
+  '/_app/patients/$id/': typeof AppPatientsIdIndexRoute
+  '/_app/staff/$id/': typeof AppStaffIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/test'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/dashboard'
+    | '/profile'
+    | '/appointments/$id'
+    | '/appointments/new'
+    | '/schedule/$doctorId'
+    | '/staff/new'
+    | '/appointments/'
+    | '/patients/'
+    | '/schedule/'
+    | '/staff/'
+    | '/patients/$id/edit'
+    | '/patients/$id/medical'
+    | '/staff/$id/edit'
+    | '/patients/$id/'
+    | '/staff/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/test'
-  id: '__root__' | '/' | '/test'
+  to:
+    | '/login'
+    | '/register'
+    | '/dashboard'
+    | '/profile'
+    | '/'
+    | '/appointments/$id'
+    | '/appointments/new'
+    | '/schedule/$doctorId'
+    | '/staff/new'
+    | '/appointments'
+    | '/patients'
+    | '/schedule'
+    | '/staff'
+    | '/patients/$id/edit'
+    | '/patients/$id/medical'
+    | '/staff/$id/edit'
+    | '/patients/$id'
+    | '/staff/$id'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/login'
+    | '/register'
+    | '/_app/dashboard'
+    | '/_app/profile'
+    | '/_app/'
+    | '/_app/appointments/$id'
+    | '/_app/appointments/new'
+    | '/_app/schedule/$doctorId'
+    | '/_app/staff/new'
+    | '/_app/appointments/'
+    | '/_app/patients/'
+    | '/_app/schedule/'
+    | '/_app/staff/'
+    | '/_app/patients/$id/edit'
+    | '/_app/patients/$id/medical'
+    | '/_app/staff/$id/edit'
+    | '/_app/patients/$id/'
+    | '/_app/staff/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  TestRoute: typeof TestRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/test': {
-      id: '/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof TestRouteImport
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/staff/': {
+      id: '/_app/staff/'
+      path: '/staff'
+      fullPath: '/staff/'
+      preLoaderRoute: typeof AppStaffIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/schedule/': {
+      id: '/_app/schedule/'
+      path: '/schedule'
+      fullPath: '/schedule/'
+      preLoaderRoute: typeof AppScheduleIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/patients/': {
+      id: '/_app/patients/'
+      path: '/patients'
+      fullPath: '/patients/'
+      preLoaderRoute: typeof AppPatientsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/appointments/': {
+      id: '/_app/appointments/'
+      path: '/appointments'
+      fullPath: '/appointments/'
+      preLoaderRoute: typeof AppAppointmentsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/staff/new': {
+      id: '/_app/staff/new'
+      path: '/staff/new'
+      fullPath: '/staff/new'
+      preLoaderRoute: typeof AppStaffNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/schedule/$doctorId': {
+      id: '/_app/schedule/$doctorId'
+      path: '/schedule/$doctorId'
+      fullPath: '/schedule/$doctorId'
+      preLoaderRoute: typeof AppScheduleDoctorIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/appointments/new': {
+      id: '/_app/appointments/new'
+      path: '/appointments/new'
+      fullPath: '/appointments/new'
+      preLoaderRoute: typeof AppAppointmentsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/appointments/$id': {
+      id: '/_app/appointments/$id'
+      path: '/appointments/$id'
+      fullPath: '/appointments/$id'
+      preLoaderRoute: typeof AppAppointmentsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/staff/$id/': {
+      id: '/_app/staff/$id/'
+      path: '/staff/$id'
+      fullPath: '/staff/$id/'
+      preLoaderRoute: typeof AppStaffIdIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/patients/$id/': {
+      id: '/_app/patients/$id/'
+      path: '/patients/$id'
+      fullPath: '/patients/$id/'
+      preLoaderRoute: typeof AppPatientsIdIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/staff/$id/edit': {
+      id: '/_app/staff/$id/edit'
+      path: '/staff/$id/edit'
+      fullPath: '/staff/$id/edit'
+      preLoaderRoute: typeof AppStaffIdEditRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/patients/$id/medical': {
+      id: '/_app/patients/$id/medical'
+      path: '/patients/$id/medical'
+      fullPath: '/patients/$id/medical'
+      preLoaderRoute: typeof AppPatientsIdMedicalRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/patients/$id/edit': {
+      id: '/_app/patients/$id/edit'
+      path: '/patients/$id/edit'
+      fullPath: '/patients/$id/edit'
+      preLoaderRoute: typeof AppPatientsIdEditRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppAppointmentsIdRoute: typeof AppAppointmentsIdRoute
+  AppAppointmentsNewRoute: typeof AppAppointmentsNewRoute
+  AppScheduleDoctorIdRoute: typeof AppScheduleDoctorIdRoute
+  AppStaffNewRoute: typeof AppStaffNewRoute
+  AppAppointmentsIndexRoute: typeof AppAppointmentsIndexRoute
+  AppPatientsIndexRoute: typeof AppPatientsIndexRoute
+  AppScheduleIndexRoute: typeof AppScheduleIndexRoute
+  AppStaffIndexRoute: typeof AppStaffIndexRoute
+  AppPatientsIdEditRoute: typeof AppPatientsIdEditRoute
+  AppPatientsIdMedicalRoute: typeof AppPatientsIdMedicalRoute
+  AppStaffIdEditRoute: typeof AppStaffIdEditRoute
+  AppPatientsIdIndexRoute: typeof AppPatientsIdIndexRoute
+  AppStaffIdIndexRoute: typeof AppStaffIdIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppAppointmentsIdRoute: AppAppointmentsIdRoute,
+  AppAppointmentsNewRoute: AppAppointmentsNewRoute,
+  AppScheduleDoctorIdRoute: AppScheduleDoctorIdRoute,
+  AppStaffNewRoute: AppStaffNewRoute,
+  AppAppointmentsIndexRoute: AppAppointmentsIndexRoute,
+  AppPatientsIndexRoute: AppPatientsIndexRoute,
+  AppScheduleIndexRoute: AppScheduleIndexRoute,
+  AppStaffIndexRoute: AppStaffIndexRoute,
+  AppPatientsIdEditRoute: AppPatientsIdEditRoute,
+  AppPatientsIdMedicalRoute: AppPatientsIdMedicalRoute,
+  AppStaffIdEditRoute: AppStaffIdEditRoute,
+  AppPatientsIdIndexRoute: AppPatientsIdIndexRoute,
+  AppStaffIdIndexRoute: AppStaffIdIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  TestRoute: TestRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
