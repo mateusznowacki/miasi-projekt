@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="MedFlow" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="MiASI" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="pl.edu.pwr.MiASI.MiAsiApplication" />
-    <method v="2">
-      <option name="Make" enabled="true" />
-    </method>
-  </configuration>
-</component>
