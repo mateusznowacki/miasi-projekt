@@ -7,4 +7,5 @@ public interface PatientRepository {
     void save(Patient patient);
     Optional<Patient> findById(PatientId id);
     List<Patient> findAll();
+    boolean existsByPesel(String pesel);
 }

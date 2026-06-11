@@ -15,6 +15,7 @@ public class PatientJpaEntity {
     private String pesel;
     private String phone;
     private String email;
+    private String address;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "patient_id")
     private List<MedicalRecordJpaEntity> records;

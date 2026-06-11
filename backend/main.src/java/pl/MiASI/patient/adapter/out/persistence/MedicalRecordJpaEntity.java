@@ -16,5 +16,8 @@ public class MedicalRecordJpaEntity {
     private String symptoms;
     private String prescriptions;
     private String notes;
+    private String testResults;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private UUID updatedBy;
 }

@@ -20,10 +20,14 @@ import java.util.UUID;
 public class PatientService implements PatientUseCase {
     private final PatientRepository patientRepository;
     private final AuthUseCase authUseCase;
+    private final org.springframework.context.ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
     public PatientId registerPatient(String firstName, String lastName, String pesel, String phone, String email, String password) {
+        if (patientRepository.existsByPesel(pesel)) {
+            throw new IllegalArgumentException("PESEL taken");
+        }
         // Zapis do IAM
         UUID accountId = authUseCase.registerUser(email, password, Role.PATIENT).value();
         PatientId patientId = new PatientId(accountId);
@@ -31,30 +35,42 @@ public class PatientService implements PatientUseCase {
         // Zapis profilu w Kontekście Pacjenta
         Patient patient = Patient.create(patientId, firstName, lastName, pesel, phone, email);
         patientRepository.save(patient);
+        
+        // Send activation email
+        System.out.println("Sending activation link to " + email + ": /api/auth/activate?token=" + accountId);
+        
         return patientId;
     }
 
     @Override
     @Transactional
-    public void updatePersonalData(PatientId id, String firstName, String lastName, String phone, String email) {
+    public void updatePersonalData(PatientId id, String firstName, String lastName, String phone, String email, String address) {
+        authUseCase.updateEmail(new pl.MiASI.iam.domain.model.AccountId(id.value()), email);
         Patient patient = patientRepository.findById(id).orElseThrow();
-        patient.updatePersonalData(firstName, lastName, phone, email);
+        patient.updatePersonalData(firstName, lastName, phone, email, address);
         patientRepository.save(patient);
     }
 
     @Override
     @Transactional
-    public void addMedicalRecord(PatientId id, UUID visitId, DoctorId doctorId, String diagnoses, String symptoms, String prescriptions, String notes) {
+    public void addMedicalRecord(PatientId id, UUID visitId, DoctorId doctorId, String diagnoses, String symptoms, String prescriptions, String notes, String testResults) {
+        if (diagnoses == null || diagnoses.isBlank() || symptoms == null || symptoms.isBlank() || prescriptions == null || prescriptions.isBlank()) {
+            throw new IllegalArgumentException("Wyniki badania, rozpoznanie oraz zalecenia są wymagane.");
+        }
         Patient patient = patientRepository.findById(id).orElseThrow();
-        patient.addMedicalRecord(new MedicalRecord(UUID.randomUUID(), visitId, doctorId, diagnoses, symptoms, prescriptions, notes, LocalDateTime.now()));
+        patient.addMedicalRecord(new MedicalRecord(UUID.randomUUID(), visitId, doctorId, diagnoses, symptoms, prescriptions, notes, testResults, LocalDateTime.now(), null, null));
         patientRepository.save(patient);
+        eventPublisher.publishEvent(new pl.MiASI.medicalcare.domain.event.RecordCreatedEvent(new pl.MiASI.medicalcare.domain.model.VisitId(visitId)));
     }
 
     @Override
     @Transactional
-    public void updateMedicalRecord(PatientId id, UUID recordId, String diagnoses, String symptoms, String prescriptions, String notes) {
+    public void updateMedicalRecord(PatientId id, UUID recordId, String diagnoses, String symptoms, String prescriptions, String notes, String testResults, DoctorId updatedBy) {
+        if (diagnoses == null || diagnoses.isBlank()) {
+            throw new IllegalArgumentException("Rozpoznanie (kody ICD-10) jest wymagane.");
+        }
         Patient patient = patientRepository.findById(id).orElseThrow();
-        patient.updateMedicalRecord(recordId, diagnoses, symptoms, prescriptions, notes);
+        patient.updateMedicalRecord(recordId, diagnoses, symptoms, prescriptions, notes, testResults, updatedBy);
         patientRepository.save(patient);
     }
 
@@ -78,13 +94,12 @@ public class PatientService implements PatientUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Patient> searchPatients(String query) {
-        if (query == null || query.isBlank()) return listPatients();
-        String lowerQuery = query.toLowerCase();
+    public List<Patient> searchPatients(String firstName, String lastName, String pesel, String patientCardNumber) {
         return patientRepository.findAll().stream()
-                .filter(p -> p.getFirstName().toLowerCase().contains(lowerQuery) || 
-                             p.getLastName().toLowerCase().contains(lowerQuery) || 
-                             p.getPesel().contains(query))
+                .filter(p -> (firstName == null || firstName.isBlank() || p.getFirstName().toLowerCase().contains(firstName.toLowerCase())))
+                .filter(p -> (lastName == null || lastName.isBlank() || p.getLastName().toLowerCase().contains(lastName.toLowerCase())))
+                .filter(p -> (pesel == null || pesel.isBlank() || p.getPesel().contains(pesel)))
+                .filter(p -> (patientCardNumber == null || patientCardNumber.isBlank() || p.getId().value().toString().equals(patientCardNumber)))
                 .toList();
     }
 }
