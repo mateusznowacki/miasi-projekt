@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface ScheduleQueryUseCase {
     Optional<Schedule> getScheduleByDoctor(DoctorId doctorId);
+    java.util.List<Schedule> getAllSchedules();
 }

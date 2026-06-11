@@ -22,15 +22,21 @@ public class VisitEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onVisitCanceled(VisitCanceledEvent event) {
-        // Need to find doctorId from visit to free slots.
-        // Wait, event only has visitId and slotIds.
         visitRepository.findById(event.visitId()).ifPresent(visit -> {
             scheduleManagementUseCase.freeSlots(visit.getDoctorId(), event.slotIds());
+            System.out.println("[Powiadomienie] Wysyłanie powiadomienia o anulowaniu wizyty " + event.visitId().value() + " do lekarza: " + visit.getDoctorId().value());
         });
     }
 
     @EventListener
     public void onRecordCreated(RecordCreatedEvent event) {
         visitManagementUseCase.completeVisit(event.visitId());
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void onVisitReserved(pl.MiASI.medicalcare.domain.event.VisitReservedEvent event) {
+        visitRepository.findById(event.visitId()).ifPresent(visit -> {
+            System.out.println("[Powiadomienie] Wysyłanie potwierdzenia o rezerwacji wizyty " + event.visitId().value() + " do pacjenta: " + visit.getPatientId().value());
+        });
     }
 }

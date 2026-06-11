@@ -9,4 +9,5 @@ public interface ScheduleRepository {
     void save(Schedule schedule);
     Optional<Schedule> findById(ScheduleId scheduleId);
     Optional<Schedule> findByDoctorId(DoctorId doctorId);
+    java.util.List<Schedule> findAll();
 }

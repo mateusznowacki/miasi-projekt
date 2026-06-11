@@ -34,18 +34,42 @@ public class ScheduleController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{doctorId}/slots/{slotId}")
+    public ResponseEntity<Void> removeSlot(@PathVariable UUID doctorId, @PathVariable UUID slotId) {
+        scheduleManagementUseCase.removeSlot(new DoctorId(doctorId), new SlotId(slotId));
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<ScheduleDto> getScheduleByDoctor(@PathVariable UUID doctorId, @RequestParam(required = false) String date) {
+    public ResponseEntity<ScheduleDto> getScheduleByDoctor(
+            @PathVariable UUID doctorId, 
+            @RequestParam(required = false) String date, 
+            @RequestParam(required = false) String from, 
+            @RequestParam(required = false) String to, 
+            @RequestParam(required = false) String status) {
         return scheduleQueryUseCase.getScheduleByDoctor(new DoctorId(doctorId))
                 .map(schedule -> {
+                    List<pl.MiASI.medicalcare.domain.model.Slot> filteredSlots = schedule.getSlots();
                     if (date != null) {
                         java.time.LocalDate targetDate = java.time.LocalDate.parse(date);
-                        List<pl.MiASI.medicalcare.domain.model.Slot> filteredSlots = schedule.getSlots().stream()
+                        filteredSlots = filteredSlots.stream()
                                 .filter(s -> s.getTimeRange().startTime().toLocalDate().equals(targetDate))
                                 .collect(Collectors.toList());
-                        return ScheduleDto.fromDomain(new Schedule(schedule.getScheduleId(), schedule.getDoctorId(), filteredSlots));
                     }
-                    return ScheduleDto.fromDomain(schedule);
+                    if (from != null && to != null) {
+                        java.time.LocalDate fromDate = java.time.LocalDate.parse(from);
+                        java.time.LocalDate toDate = java.time.LocalDate.parse(to);
+                        filteredSlots = filteredSlots.stream()
+                                .filter(s -> !s.getTimeRange().startTime().toLocalDate().isBefore(fromDate) && 
+                                             !s.getTimeRange().startTime().toLocalDate().isAfter(toDate))
+                                .collect(Collectors.toList());
+                    }
+                    if (status != null) {
+                        filteredSlots = filteredSlots.stream()
+                                .filter(s -> s.getStatus().name().equalsIgnoreCase(status))
+                                .collect(Collectors.toList());
+                    }
+                    return ScheduleDto.fromDomain(new Schedule(schedule.getScheduleId(), schedule.getDoctorId(), filteredSlots));
                 })
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

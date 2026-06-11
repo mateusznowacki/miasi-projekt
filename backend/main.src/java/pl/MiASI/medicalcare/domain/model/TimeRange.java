@@ -11,4 +11,8 @@ public record TimeRange(LocalDateTime startTime, LocalDateTime endTime) {
             throw new IllegalArgumentException("Start time must be before end time");
         }
     }
+
+    public boolean overlapsWith(TimeRange other) {
+        return this.startTime.isBefore(other.endTime()) && other.startTime().isBefore(this.endTime);
+    }
 }

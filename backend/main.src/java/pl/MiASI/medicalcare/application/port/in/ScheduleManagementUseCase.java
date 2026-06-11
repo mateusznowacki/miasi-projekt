@@ -9,4 +9,5 @@ public interface ScheduleManagementUseCase {
     void addTimeSlots(DoctorId doctorId, List<AddSlotCommand> commands);
     void freeSlots(DoctorId doctorId, List<SlotId> slotIds);
     void updateSlot(DoctorId doctorId, SlotId slotId, TimeRange newTimeRange, String newOffice);
+    void removeSlot(DoctorId doctorId, SlotId slotId);
 }

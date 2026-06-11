@@ -20,4 +20,9 @@ public class ScheduleQueryService implements ScheduleQueryUseCase {
     public Optional<Schedule> getScheduleByDoctor(DoctorId doctorId) {
         return scheduleRepository.findByDoctorId(doctorId);
     }
+
+    @Override
+    public java.util.List<Schedule> getAllSchedules() {
+        return scheduleRepository.findAll();
+    }
 }

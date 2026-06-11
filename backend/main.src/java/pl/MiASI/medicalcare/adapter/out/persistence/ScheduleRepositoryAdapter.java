@@ -60,4 +60,9 @@ public class ScheduleRepositoryAdapter implements ScheduleRepository {
                 )).collect(Collectors.toList())
         );
     }
+
+    @Override
+    public java.util.List<Schedule> findAll() {
+        return repository.findAll().stream().map(this::mapToDomain).collect(Collectors.toList());
+    }
 }

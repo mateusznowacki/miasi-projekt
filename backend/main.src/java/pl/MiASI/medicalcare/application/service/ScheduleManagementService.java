@@ -52,4 +52,13 @@ public class ScheduleManagementService implements ScheduleManagementUseCase {
         schedule.updateSlot(slotId, newTimeRange, newOffice);
         scheduleRepository.save(schedule);
     }
+
+    @Override
+    @Transactional
+    public void removeSlot(DoctorId doctorId, SlotId slotId) {
+        Schedule schedule = scheduleRepository.findByDoctorId(doctorId)
+                .orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
+        schedule.removeSlot(slotId);
+        scheduleRepository.save(schedule);
+    }
 }
