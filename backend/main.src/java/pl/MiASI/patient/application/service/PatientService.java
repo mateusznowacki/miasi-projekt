@@ -1,15 +1,17 @@
 package pl.MiASI.patient.application.service;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.MiASI.iam.application.port.in.AuthUseCase;
+import pl.MiASI.iam.domain.model.Role;
 import pl.MiASI.patient.application.port.in.PatientUseCase;
 import pl.MiASI.patient.domain.model.MedicalRecord;
 import pl.MiASI.patient.domain.model.Patient;
 import pl.MiASI.patient.domain.repository.PatientRepository;
 import pl.MiASI.shared.domain.model.DoctorId;
 import pl.MiASI.shared.domain.model.PatientId;
-import pl.MiASI.iam.application.port.in.AuthUseCase;
-import pl.MiASI.iam.domain.model.Role;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -31,14 +33,14 @@ public class PatientService implements PatientUseCase {
         // Zapis do IAM
         UUID accountId = authUseCase.registerUser(email, password, Role.PATIENT).value();
         PatientId patientId = new PatientId(accountId);
-        
+
         // Zapis profilu w Kontekście Pacjenta
         Patient patient = Patient.create(patientId, firstName, lastName, pesel, phone, email);
         patientRepository.save(patient);
-        
+
         // Send activation email
         System.out.println("Sending activation link to " + email + ": /api/auth/activate?token=" + accountId);
-        
+
         return patientId;
     }
 

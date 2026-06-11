@@ -2,13 +2,9 @@ package pl.MiASI.medicalcare.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import pl.MiASI.shared.domain.model.DoctorId;
-import pl.MiASI.medicalcare.domain.model.Schedule;
-import pl.MiASI.medicalcare.domain.model.ScheduleId;
-import pl.MiASI.medicalcare.domain.model.Slot;
-import pl.MiASI.medicalcare.domain.model.SlotId;
-import pl.MiASI.medicalcare.domain.model.TimeRange;
+import pl.MiASI.medicalcare.domain.model.*;
 import pl.MiASI.medicalcare.domain.repository.ScheduleRepository;
+import pl.MiASI.shared.domain.model.DoctorId;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,11 +17,11 @@ public class ScheduleRepositoryAdapter implements ScheduleRepository {
 
     @Override
     public void save(Schedule schedule) {
-        ScheduleJpaEntity entity = repository.findById(schedule.getScheduleId().value()).orElse(new ScheduleJpaEntity());
-        entity.setId(schedule.getScheduleId().value());
-        entity.setDoctorId(schedule.getDoctorId().value());
-        
-        entity.setSlots(schedule.getSlots().stream().map(slot -> {
+        ScheduleJpaEntity entity = repository.findById(schedule.scheduleId().value()).orElse(new ScheduleJpaEntity());
+        entity.setId(schedule.scheduleId().value());
+        entity.setDoctorId(schedule.doctorId().value());
+
+        entity.setSlots(schedule.slots().stream().map(slot -> {
             SlotJpaEntity slotEntity = new SlotJpaEntity();
             slotEntity.setId(slot.getSlotId().value());
             slotEntity.setStartTime(slot.getTimeRange().startTime());

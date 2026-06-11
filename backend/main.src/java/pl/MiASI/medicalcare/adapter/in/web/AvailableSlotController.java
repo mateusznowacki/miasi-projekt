@@ -43,7 +43,7 @@ public class AvailableSlotController {
         List<UUID> matchingDoctorIds = doctors.stream().map(StaffMember::getId).collect(Collectors.toList());
 
         List<Schedule> schedules = scheduleQueryUseCase.getAllSchedules().stream()
-                .filter(s -> matchingDoctorIds.contains(s.getDoctorId().value()))
+                .filter(s -> matchingDoctorIds.contains(s.doctorId().value()))
                 .collect(Collectors.toList());
 
         List<AvailableSlotDto> availableSlots = new ArrayList<>();
@@ -52,12 +52,12 @@ public class AvailableSlotController {
 
         for (Schedule schedule : schedules) {
             StaffMember doc = doctors.stream()
-                .filter(d -> d.getId().equals(schedule.getDoctorId().value()))
-                .findFirst().orElse(null);
+                    .filter(d -> d.getId().equals(schedule.doctorId().value()))
+                    .findFirst().orElse(null);
 
             if (doc == null) continue;
 
-            for (Slot slot : schedule.getSlots()) {
+            for (Slot slot : schedule.slots()) {
                 if (!"AVAILABLE".equalsIgnoreCase(slot.getStatus().name())) continue;
 
                 LocalDate slotDate = slot.getTimeRange().startTime().toLocalDate();
@@ -65,14 +65,14 @@ public class AvailableSlotController {
                 if (toDate != null && slotDate.isAfter(toDate)) continue;
 
                 availableSlots.add(new AvailableSlotDto(
-                    slot.getSlotId().value(),
-                    doc.getId(),
-                    doc.getFirstName(),
-                    doc.getLastName(),
-                    doc.getSpecialization(),
-                    slot.getTimeRange().startTime(),
-                    slot.getTimeRange().endTime(),
-                    slot.getOffice()
+                        slot.getSlotId().value(),
+                        doc.getId(),
+                        doc.getFirstName(),
+                        doc.getLastName(),
+                        doc.getSpecialization(),
+                        slot.getTimeRange().startTime(),
+                        slot.getTimeRange().endTime(),
+                        slot.getOffice()
                 ));
             }
         }
@@ -82,12 +82,13 @@ public class AvailableSlotController {
 }
 
 record AvailableSlotDto(
-    UUID slotId,
-    UUID doctorId,
-    String doctorFirstName,
-    String doctorLastName,
-    String specialization,
-    LocalDateTime startTime,
-    LocalDateTime endTime,
-    String office
-) {}
+        UUID slotId,
+        UUID doctorId,
+        String doctorFirstName,
+        String doctorLastName,
+        String specialization,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
+        String office
+) {
+}

@@ -1,21 +1,24 @@
 package pl.MiASI.patient.adapter.in.web;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import pl.MiASI.patient.application.port.in.PatientUseCase;
 import pl.MiASI.shared.domain.model.PatientId;
+
 import java.util.Map;
 import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/patients")
 @RequiredArgsConstructor
 public class PatientController {
     private final PatientUseCase patientUseCase;
-    
+
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@Valid @RequestBody RegisterReq req) {
         PatientId id = patientUseCase.registerPatient(req.firstName(), req.lastName(), req.pesel(), req.phone(), req.email(), req.password());
@@ -87,45 +90,50 @@ public class PatientController {
             @RequestParam(required = false) String pesel,
             @RequestParam(required = false) String patientCardNumber) {
         if ((firstName == null || firstName.isBlank()) &&
-            (lastName == null || lastName.isBlank()) &&
-            (pesel == null || pesel.isBlank()) &&
-            (patientCardNumber == null || patientCardNumber.isBlank())) {
+                (lastName == null || lastName.isBlank()) &&
+                (pesel == null || pesel.isBlank()) &&
+                (patientCardNumber == null || patientCardNumber.isBlank())) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(patientUseCase.searchPatients(firstName, lastName, pesel, patientCardNumber));
     }
 }
+
 record RegisterReq(
-        @NotBlank String firstName, 
-        @NotBlank String lastName, 
-        @NotBlank String pesel, 
-        @NotBlank String phone, 
-        @NotBlank @Email String email, 
+        @NotBlank String firstName,
+        @NotBlank String lastName,
+        @NotBlank String pesel,
+        @NotBlank String phone,
+        @NotBlank @Email String email,
         @NotBlank String password
-) {}
+) {
+}
 
 record UpdateMedicalRecordReq(
-        @NotBlank String diagnoses, 
-        String symptoms, 
-        String prescriptions, 
+        @NotBlank String diagnoses,
+        String symptoms,
+        String prescriptions,
         String notes,
         String testResults
-) {}
+) {
+}
 
 record UpdatePersonalDataReq(
-        @NotBlank String firstName, 
-        @NotBlank String lastName, 
-        @NotBlank String phone, 
+        @NotBlank String firstName,
+        @NotBlank String lastName,
+        @NotBlank String phone,
         @NotBlank @Email String email,
         @NotBlank String address
-) {}
+) {
+}
 
 record AddMedicalRecordReq(
-        UUID visitId, 
-        UUID doctorId, 
-        @NotBlank String diagnoses, 
-        String symptoms, 
-        String prescriptions, 
+        UUID visitId,
+        UUID doctorId,
+        @NotBlank String diagnoses,
+        String symptoms,
+        String prescriptions,
         String notes,
         String testResults
-) {}
+) {
+}

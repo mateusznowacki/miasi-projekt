@@ -4,18 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.MiASI.shared.domain.model.DoctorId;
-import pl.MiASI.shared.domain.model.PatientId;
 import pl.MiASI.medicalcare.application.port.in.ScheduleQueryUseCase;
 import pl.MiASI.medicalcare.application.port.in.VisitManagementUseCase;
 import pl.MiASI.medicalcare.application.port.in.VisitQueryUseCase;
-import pl.MiASI.medicalcare.domain.model.ConsultationType;
-import pl.MiASI.medicalcare.domain.model.Schedule;
-import pl.MiASI.medicalcare.domain.model.Slot;
-import pl.MiASI.medicalcare.domain.model.SlotId;
-import pl.MiASI.medicalcare.domain.model.Visit;
-import pl.MiASI.medicalcare.domain.model.VisitId;
+import pl.MiASI.medicalcare.domain.model.*;
 import pl.MiASI.patient.application.port.in.PatientUseCase;
+import pl.MiASI.shared.domain.model.DoctorId;
+import pl.MiASI.shared.domain.model.PatientId;
 import pl.MiASI.staff.application.port.in.StaffUseCase;
 
 import java.time.LocalDateTime;
@@ -54,7 +49,7 @@ public class VisitController {
 
     @GetMapping("/patient/{patientId}")
     public ResponseEntity<List<VisitDto>> getVisitsByPatient(
-            @PathVariable UUID patientId, 
+            @PathVariable UUID patientId,
             @RequestParam(required = false) String filter,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
@@ -67,7 +62,7 @@ public class VisitController {
 
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<List<VisitDto>> getVisitsByDoctor(
-            @PathVariable UUID doctorId, 
+            @PathVariable UUID doctorId,
             @RequestParam(required = false) String filter,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
@@ -91,9 +86,9 @@ public class VisitController {
                     }
                     if (startDate != null && dtoDate != null && dtoDate.isBefore(startDate)) return false;
                     if (endDate != null && dtoDate != null && dtoDate.isAfter(endDate)) return false;
-                    if (otherId != null && !dto.doctorId().equals(otherId) && !dto.patientId().equals(otherId)) return false;
-                    if (status != null && !dto.status().equalsIgnoreCase(status)) return false;
-                    return true;
+                    if (otherId != null && !dto.doctorId().equals(otherId) && !dto.patientId().equals(otherId))
+                        return false;
+                    return status == null || dto.status().equalsIgnoreCase(status);
                 })
                 .collect(Collectors.toList());
     }
@@ -113,7 +108,7 @@ public class VisitController {
 
         if (schedule != null && !visit.getSlotIds().isEmpty()) {
             SlotId firstSlotId = visit.getSlotIds().get(0);
-            Optional<Slot> slotOpt = schedule.getSlots().stream()
+            Optional<Slot> slotOpt = schedule.slots().stream()
                     .filter(s -> s.getSlotId().equals(firstSlotId))
                     .findFirst();
             if (slotOpt.isPresent()) {
@@ -143,6 +138,9 @@ public class VisitController {
     }
 }
 
-record ReserveVisitRequest(UUID patientId, UUID doctorId, ConsultationType type, List<UUID> slotIds) {}
+record ReserveVisitRequest(UUID patientId, UUID doctorId, ConsultationType type, List<UUID> slotIds) {
+}
 
-record VisitDto(UUID id, String date, UUID doctorId, String doctorName, UUID patientId, String patientName, String status, String type, String room) {}
+record VisitDto(UUID id, String date, UUID doctorId, String doctorName, UUID patientId, String patientName,
+                String status, String type, String room) {
+}

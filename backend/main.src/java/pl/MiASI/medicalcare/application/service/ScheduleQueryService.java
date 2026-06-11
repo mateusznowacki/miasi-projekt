@@ -3,10 +3,10 @@ package pl.MiASI.medicalcare.application.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.MiASI.shared.domain.model.DoctorId;
 import pl.MiASI.medicalcare.application.port.in.ScheduleQueryUseCase;
 import pl.MiASI.medicalcare.domain.model.Schedule;
 import pl.MiASI.medicalcare.domain.repository.ScheduleRepository;
+import pl.MiASI.shared.domain.model.DoctorId;
 
 import java.util.Optional;
 

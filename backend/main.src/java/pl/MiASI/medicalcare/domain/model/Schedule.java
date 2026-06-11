@@ -1,17 +1,12 @@
 package pl.MiASI.medicalcare.domain.model;
 
+import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
 import pl.MiASI.shared.domain.model.DoctorId;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-public class Schedule {
-    private final ScheduleId scheduleId;
-    private final DoctorId doctorId;
-    private final List<Slot> slots;
-
+public record Schedule(ScheduleId scheduleId, DoctorId doctorId, List<Slot> slots) {
     public Schedule(ScheduleId scheduleId, DoctorId doctorId, List<Slot> slots) {
         this.scheduleId = scheduleId;
         this.doctorId = doctorId;
@@ -22,8 +17,8 @@ public class Schedule {
         return new Schedule(new ScheduleId(), doctorId, new ArrayList<>());
     }
 
-    public void addTimeSlots(List<pl.MiASI.medicalcare.application.port.in.AddSlotCommand> commands) {
-        for (pl.MiASI.medicalcare.application.port.in.AddSlotCommand cmd : commands) {
+    public void addTimeSlots(List<AddSlotCommand> commands) {
+        for (AddSlotCommand cmd : commands) {
             validateNoOverlap(cmd.timeRange(), null);
             this.slots.add(Slot.create(cmd.timeRange(), cmd.office()));
         }
@@ -39,8 +34,8 @@ public class Schedule {
 
     private void validateNoOverlap(TimeRange newTimeRange, SlotId excludeSlotId) {
         boolean hasOverlap = slots.stream()
-            .filter(s -> excludeSlotId == null || !s.getSlotId().equals(excludeSlotId))
-            .anyMatch(s -> s.getTimeRange().overlapsWith(newTimeRange));
+                .filter(s -> !s.getSlotId().equals(excludeSlotId))
+                .anyMatch(s -> s.getTimeRange().overlapsWith(newTimeRange));
         if (hasOverlap) {
             throw new IllegalArgumentException("Konflikt terminów: Podany przedział czasowy nakłada się na istniejące sloty.");
         }
@@ -70,8 +65,8 @@ public class Schedule {
 
     private Slot findSlot(SlotId id) {
         return slots.stream()
-            .filter(s -> s.getSlotId().equals(id))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Slot not found: " + id.value()));
+                .filter(s -> s.getSlotId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Slot not found: " + id.value()));
     }
 }

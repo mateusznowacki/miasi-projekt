@@ -3,10 +3,10 @@ package pl.MiASI.medicalcare.application.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.MiASI.shared.domain.model.PatientId;
 import pl.MiASI.medicalcare.application.port.in.VisitQueryUseCase;
 import pl.MiASI.medicalcare.domain.model.Visit;
 import pl.MiASI.medicalcare.domain.repository.VisitRepository;
+import pl.MiASI.shared.domain.model.PatientId;
 
 import java.util.List;
 

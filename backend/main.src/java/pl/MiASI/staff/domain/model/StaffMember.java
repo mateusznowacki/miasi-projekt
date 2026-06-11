@@ -1,6 +1,7 @@
 package pl.MiASI.staff.domain.model;
 
 import lombok.Getter;
+
 import java.util.UUID;
 
 @Getter

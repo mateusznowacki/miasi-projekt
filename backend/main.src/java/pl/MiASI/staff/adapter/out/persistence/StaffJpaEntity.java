@@ -16,10 +16,10 @@ import java.util.UUID;
 public class StaffJpaEntity {
     @Id
     private UUID id;
-    
+
     @Enumerated(EnumType.STRING)
     private StaffRole role;
-    
+
     private String firstName;
     private String lastName;
     private String email;

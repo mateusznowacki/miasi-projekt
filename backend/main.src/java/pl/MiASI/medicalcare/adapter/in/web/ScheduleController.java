@@ -3,12 +3,12 @@ package pl.MiASI.medicalcare.adapter.in.web;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.MiASI.shared.domain.model.DoctorId;
+import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
 import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
 import pl.MiASI.medicalcare.application.port.in.ScheduleQueryUseCase;
 import pl.MiASI.medicalcare.domain.model.Schedule;
-import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
 import pl.MiASI.medicalcare.domain.model.SlotId;
+import pl.MiASI.shared.domain.model.DoctorId;
 
 import java.util.List;
 import java.util.UUID;
@@ -42,14 +42,14 @@ public class ScheduleController {
 
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<ScheduleDto> getScheduleByDoctor(
-            @PathVariable UUID doctorId, 
-            @RequestParam(required = false) String date, 
-            @RequestParam(required = false) String from, 
-            @RequestParam(required = false) String to, 
+            @PathVariable UUID doctorId,
+            @RequestParam(required = false) String date,
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to,
             @RequestParam(required = false) String status) {
         return scheduleQueryUseCase.getScheduleByDoctor(new DoctorId(doctorId))
                 .map(schedule -> {
-                    List<pl.MiASI.medicalcare.domain.model.Slot> filteredSlots = schedule.getSlots();
+                    List<pl.MiASI.medicalcare.domain.model.Slot> filteredSlots = schedule.slots();
                     if (date != null) {
                         java.time.LocalDate targetDate = java.time.LocalDate.parse(date);
                         filteredSlots = filteredSlots.stream()
@@ -60,8 +60,8 @@ public class ScheduleController {
                         java.time.LocalDate fromDate = java.time.LocalDate.parse(from);
                         java.time.LocalDate toDate = java.time.LocalDate.parse(to);
                         filteredSlots = filteredSlots.stream()
-                                .filter(s -> !s.getTimeRange().startTime().toLocalDate().isBefore(fromDate) && 
-                                             !s.getTimeRange().startTime().toLocalDate().isAfter(toDate))
+                                .filter(s -> !s.getTimeRange().startTime().toLocalDate().isBefore(fromDate) &&
+                                        !s.getTimeRange().startTime().toLocalDate().isAfter(toDate))
                                 .collect(Collectors.toList());
                     }
                     if (status != null) {
@@ -69,24 +69,27 @@ public class ScheduleController {
                                 .filter(s -> s.getStatus().name().equalsIgnoreCase(status))
                                 .collect(Collectors.toList());
                     }
-                    return ScheduleDto.fromDomain(new Schedule(schedule.getScheduleId(), schedule.getDoctorId(), filteredSlots));
+                    return ScheduleDto.fromDomain(new Schedule(schedule.scheduleId(), schedule.doctorId(), filteredSlots));
                 })
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 }
 
-record AddSlotsRequest(List<AddSlotCommand> commands) {}
+record AddSlotsRequest(List<AddSlotCommand> commands) {
+}
 
-record UpdateSlotRequest(pl.MiASI.medicalcare.domain.model.TimeRange timeRange, String office) {}
+record UpdateSlotRequest(pl.MiASI.medicalcare.domain.model.TimeRange timeRange, String office) {
+}
 
-record SlotDto(UUID slotId, pl.MiASI.medicalcare.domain.model.TimeRange timeRange, String office, String status) {}
+record SlotDto(UUID slotId, pl.MiASI.medicalcare.domain.model.TimeRange timeRange, String office, String status) {
+}
 
 record ScheduleDto(UUID scheduleId, UUID doctorId, List<SlotDto> slots) {
     static ScheduleDto fromDomain(Schedule schedule) {
-        List<SlotDto> slotDtos = schedule.getSlots().stream()
+        List<SlotDto> slotDtos = schedule.slots().stream()
                 .map(s -> new SlotDto(s.getSlotId().value(), s.getTimeRange(), s.getOffice(), s.getStatus().name()))
                 .collect(Collectors.toList());
-        return new ScheduleDto(schedule.getScheduleId().value(), schedule.getDoctorId().value(), slotDtos);
+        return new ScheduleDto(schedule.scheduleId().value(), schedule.doctorId().value(), slotDtos);
     }
 }

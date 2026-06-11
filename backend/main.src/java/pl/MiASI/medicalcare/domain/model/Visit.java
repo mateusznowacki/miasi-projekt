@@ -1,8 +1,8 @@
 package pl.MiASI.medicalcare.domain.model;
 
+import lombok.Getter;
 import pl.MiASI.shared.domain.model.DoctorId;
 import pl.MiASI.shared.domain.model.PatientId;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ public class Visit {
     private final PatientId patientId;
     private final DoctorId doctorId;
     private final ConsultationType consultationType;
-    private VisitStatus status;
     private final List<SlotId> slotIds;
+    private VisitStatus status;
 
     public Visit(VisitId visitId, PatientId patientId, DoctorId doctorId, ConsultationType consultationType, VisitStatus status, List<SlotId> slotIds) {
         this.visitId = visitId;

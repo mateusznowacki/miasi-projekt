@@ -1,4 +1,5 @@
 package pl.MiASI.iam.adapter.in.web;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +11,11 @@ import pl.MiASI.iam.application.port.in.AuthUseCase;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthUseCase authUseCase;
+
     @PostMapping("/login")
-    public ResponseEntity<AuthResult> login(@RequestBody LoginRequest req) { return ResponseEntity.ok(authUseCase.login(req.email(), req.password())); }
+    public ResponseEntity<AuthResult> login(@RequestBody LoginRequest req) {
+        return ResponseEntity.ok(authUseCase.login(req.email(), req.password()));
+    }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader(value = "Authorization", required = false) String token) {
@@ -33,4 +37,6 @@ public class AuthController {
         }
     }
 }
-record LoginRequest(String email, String password) {}
+
+record LoginRequest(String email, String password) {
+}

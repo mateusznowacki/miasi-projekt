@@ -1,15 +1,21 @@
 package pl.MiASI.patient.adapter.out.persistence;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.List;
 import java.util.UUID;
+
 @Entity
 @Table(name = "patients")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class PatientJpaEntity {
-    @Id private UUID id;
+    @Id
+    private UUID id;
     private String firstName;
     private String lastName;
     private String pesel;

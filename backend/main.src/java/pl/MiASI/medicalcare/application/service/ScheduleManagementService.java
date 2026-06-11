@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.MiASI.shared.domain.model.DoctorId;
+import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
 import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
 import pl.MiASI.medicalcare.domain.event.SlotFreedEvent;
 import pl.MiASI.medicalcare.domain.model.Schedule;
 import pl.MiASI.medicalcare.domain.model.SlotId;
 import pl.MiASI.medicalcare.domain.model.TimeRange;
-import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
 import pl.MiASI.medicalcare.domain.repository.ScheduleRepository;
+import pl.MiASI.shared.domain.model.DoctorId;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class ScheduleManagementService implements ScheduleManagementUseCase {
         schedule.freeSlots(slotIds);
         scheduleRepository.save(schedule);
 
-        eventPublisher.publishEvent(new SlotFreedEvent(schedule.getScheduleId(), slotIds));
+        eventPublisher.publishEvent(new SlotFreedEvent(schedule.scheduleId(), slotIds));
     }
 
     @Override

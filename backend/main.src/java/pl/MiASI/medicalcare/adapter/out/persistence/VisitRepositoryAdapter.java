@@ -2,15 +2,15 @@ package pl.MiASI.medicalcare.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import pl.MiASI.shared.domain.model.DoctorId;
-import pl.MiASI.shared.domain.model.PatientId;
 import pl.MiASI.medicalcare.domain.model.SlotId;
 import pl.MiASI.medicalcare.domain.model.Visit;
 import pl.MiASI.medicalcare.domain.model.VisitId;
 import pl.MiASI.medicalcare.domain.repository.VisitRepository;
+import pl.MiASI.shared.domain.model.DoctorId;
+import pl.MiASI.shared.domain.model.PatientId;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository

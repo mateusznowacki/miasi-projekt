@@ -8,8 +8,12 @@ import java.util.UUID;
 
 public interface SpringDataStaffRepository extends JpaRepository<StaffJpaEntity, UUID> {
     List<StaffJpaEntity> findByRole(StaffRole role);
+
     boolean existsByPwz(String pwz);
+
     boolean existsByPwzAndIdNot(String pwz, UUID id);
+
     boolean existsByEmail(String email);
+
     boolean existsByEmailAndIdNot(String email, UUID id);
 }

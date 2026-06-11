@@ -1,4 +1,5 @@
 package pl.MiASI.iam.application.service;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,8 @@ public class AuthService implements AuthUseCase {
     @Transactional
     public AuthResult login(String email, String password) {
         Account account = accountRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
-        if (!passwordEncoder.matches(password, account.getPasswordHash())) throw new IllegalArgumentException("Invalid credentials");
+        if (!passwordEncoder.matches(password, account.getPasswordHash()))
+            throw new IllegalArgumentException("Invalid credentials");
         if (!account.isActive()) throw new IllegalArgumentException("Account not active");
         return new AuthResult(account.getAccountId().value().toString(), account.getEmail(), account.getRole().name(), tokenProvider.generateToken(account));
     }

@@ -1,5 +1,6 @@
 package pl.MiASI.staff.adapter.in.web;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/staff")
@@ -77,7 +77,8 @@ public class StaffController {
     }
 }
 
-record StaffDto(UUID id, String role, String firstName, String lastName, String email, boolean active, String specialization, String pwz, String department, String position, String workSchedule) {
+record StaffDto(UUID id, String role, String firstName, String lastName, String email, boolean active,
+                String specialization, String pwz, String department, String position, String workSchedule) {
     static StaffDto fromDomain(StaffMember staff) {
         return new StaffDto(
                 staff.getId(),

@@ -9,7 +9,6 @@ import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
 import pl.MiASI.medicalcare.application.port.in.VisitManagementUseCase;
 import pl.MiASI.medicalcare.domain.event.RecordCreatedEvent;
 import pl.MiASI.medicalcare.domain.event.VisitCanceledEvent;
-import pl.MiASI.medicalcare.domain.model.Visit;
 import pl.MiASI.medicalcare.domain.repository.VisitRepository;
 
 @Component

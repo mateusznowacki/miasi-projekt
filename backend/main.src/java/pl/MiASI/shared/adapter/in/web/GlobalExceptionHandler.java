@@ -40,8 +40,8 @@ public class GlobalExceptionHandler {
         body.put("error", "Validation Error");
 
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> 
-            errors.put(error.getField(), error.getDefaultMessage())
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
         );
         body.put("message", "Niepoprawne dane wejściowe");
         body.put("validationErrors", errors);
