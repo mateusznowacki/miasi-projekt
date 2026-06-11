@@ -90,6 +90,11 @@
 	<build>
 		<sourceDirectory>backend/main.src/java</sourceDirectory>
 		<testSourceDirectory>backend/test/java</testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>backend/main.src/resources</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
