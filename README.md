@@ -7,3 +7,17 @@ Dokumentacja interfejsu programistycznego (API) znajduje się pod poniższym adr
 
 Specyfikacja OpenAPI (JSON) jest dostępna pod adresem:
 [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+## Jak uruchomić aplikację (Spring Boot)
+
+Aby uruchomić aplikację backendową, otwórz terminal w głównym katalogu projektu i użyj narzędzia Maven Wrapper:
+
+Na systemach Linux / macOS:
+```bash
+./mvnw spring-boot:run
+```
+
+Na systemie Windows:
+```cmd
+mvnw.cmd spring-boot:run
+```
