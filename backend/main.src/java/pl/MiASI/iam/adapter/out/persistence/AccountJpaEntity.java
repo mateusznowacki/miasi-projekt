@@ -13,4 +13,5 @@ public class AccountJpaEntity {
     @Column(unique = true, nullable = false) private String email;
     @Column(nullable = false) private String passwordHash;
     @Enumerated(EnumType.STRING) private Role role;
+    @Column(nullable = false) private boolean active = false;
 }

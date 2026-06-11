@@ -10,15 +10,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountRepositoryAdapter implements AccountRepository {
     private final SpringDataAccountRepository repo;
-    @Override public void save(Account account) {
-        AccountJpaEntity e = new AccountJpaEntity();
-        e.setId(account.getAccountId().value()); e.setEmail(account.getEmail()); e.setPasswordHash(account.getPasswordHash()); e.setRole(account.getRole());
+    @Override    public void save(Account account) {
+        AccountJpaEntity e = repo.findById(account.getAccountId().value()).orElse(new AccountJpaEntity());
+        e.setId(account.getAccountId().value()); e.setEmail(account.getEmail()); e.setPasswordHash(account.getPasswordHash()); e.setRole(account.getRole()); e.setActive(account.isActive());
         repo.save(e);
     }
     @Override public Optional<Account> findById(AccountId id) {
-        return repo.findById(id.value()).map(e -> new Account(new AccountId(e.getId()), e.getEmail(), e.getPasswordHash(), e.getRole()));
+        return repo.findById(id.value()).map(e -> new Account(new AccountId(e.getId()), e.getEmail(), e.getPasswordHash(), e.getRole(), e.isActive()));
     }
     @Override public Optional<Account> findByEmail(String email) {
-        return repo.findByEmail(email).map(e -> new Account(new AccountId(e.getId()), e.getEmail(), e.getPasswordHash(), e.getRole()));
+        return repo.findByEmail(email).map(e -> new Account(new AccountId(e.getId()), e.getEmail(), e.getPasswordHash(), e.getRole(), e.isActive()));
     }
 }
