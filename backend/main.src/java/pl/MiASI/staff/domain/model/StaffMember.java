@@ -15,8 +15,9 @@ public class StaffMember {
     private String pwz;
     private String department;
     private String position;
+    private String workSchedule;
 
-    public StaffMember(UUID id, StaffRole role, String firstName, String lastName, String email, boolean active, String specialization, String pwz, String department, String position) {
+    public StaffMember(UUID id, StaffRole role, String firstName, String lastName, String email, boolean active, String specialization, String pwz, String department, String position, String workSchedule) {
         this.id = id;
         this.role = role;
         this.firstName = firstName;
@@ -27,13 +28,14 @@ public class StaffMember {
         this.pwz = pwz;
         this.department = department;
         this.position = position;
+        this.workSchedule = workSchedule;
     }
 
-    public static StaffMember create(StaffRole role, String firstName, String lastName, String email, String specialization, String pwz, String department, String position) {
-        return new StaffMember(UUID.randomUUID(), role, firstName, lastName, email, true, specialization, pwz, department, position);
+    public static StaffMember create(UUID id, StaffRole role, String firstName, String lastName, String email, String specialization, String pwz, String department, String position, String workSchedule) {
+        return new StaffMember(id, role, firstName, lastName, email, true, specialization, pwz, department, position, workSchedule);
     }
 
-    public void update(String firstName, String lastName, String email, boolean active, String specialization, String pwz, String department, String position) {
+    public void update(String firstName, String lastName, String email, boolean active, String specialization, String pwz, String department, String position, String workSchedule) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -42,6 +44,7 @@ public class StaffMember {
         this.pwz = pwz;
         this.department = department;
         this.position = position;
+        this.workSchedule = workSchedule;
     }
 
     public void deactivate() {

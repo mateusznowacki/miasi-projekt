@@ -30,6 +30,7 @@ public class StaffRepositoryAdapter implements StaffRepository {
         entity.setPwz(staff.getPwz());
         entity.setDepartment(staff.getDepartment());
         entity.setPosition(staff.getPosition());
+        entity.setWorkSchedule(staff.getWorkSchedule());
         repository.save(entity);
     }
 
@@ -48,6 +49,31 @@ public class StaffRepositoryAdapter implements StaffRepository {
         return repository.findByRole(role).stream().map(this::mapToDomain).collect(Collectors.toList());
     }
 
+    @Override
+    public void deleteById(UUID id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByPwz(String pwz) {
+        return repository.existsByPwz(pwz);
+    }
+
+    @Override
+    public boolean existsByPwzAndIdNot(String pwz, UUID id) {
+        return repository.existsByPwzAndIdNot(pwz, id);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByEmailAndIdNot(String email, UUID id) {
+        return repository.existsByEmailAndIdNot(email, id);
+    }
+
     private StaffMember mapToDomain(StaffJpaEntity entity) {
         return new StaffMember(
                 entity.getId(),
@@ -59,7 +85,8 @@ public class StaffRepositoryAdapter implements StaffRepository {
                 entity.getSpecialization(),
                 entity.getPwz(),
                 entity.getDepartment(),
-                entity.getPosition()
+                entity.getPosition(),
+                entity.getWorkSchedule()
         );
     }
 }

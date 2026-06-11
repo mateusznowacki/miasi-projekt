@@ -19,8 +19,12 @@ public class DoctorController {
     private final StaffUseCase staffUseCase;
 
     @GetMapping
-    public ResponseEntity<List<StaffDto>> listDoctors() {
+    public ResponseEntity<List<StaffDto>> listDoctors(
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String specialization,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String name) {
         List<StaffDto> doctors = staffUseCase.getStaffByRole(StaffRole.DOCTOR).stream()
+                .filter(d -> specialization == null || (d.getSpecialization() != null && d.getSpecialization().equalsIgnoreCase(specialization)))
+                .filter(d -> name == null || d.getFirstName().toLowerCase().contains(name.toLowerCase()) || d.getLastName().toLowerCase().contains(name.toLowerCase()))
                 .map(StaffDto::fromDomain)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(doctors);

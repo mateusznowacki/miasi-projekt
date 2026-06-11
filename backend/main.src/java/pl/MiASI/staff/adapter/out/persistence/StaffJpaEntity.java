@@ -28,4 +28,5 @@ public class StaffJpaEntity {
     private String pwz;
     private String department;
     private String position;
+    private String workSchedule;
 }

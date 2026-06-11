@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/staff")
@@ -34,7 +35,7 @@ public class StaffController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createStaff(@RequestBody CreateStaffCommand command) {
+    public ResponseEntity<Map<String, String>> createStaff(@RequestBody @Valid CreateStaffCommand command) {
         UUID staffId = staffUseCase.createStaff(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("staffId", staffId.toString()));
     }
@@ -48,7 +49,7 @@ public class StaffController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateStaff(@PathVariable UUID id, @RequestBody UpdateStaffCommand command) {
+    public ResponseEntity<Void> updateStaff(@PathVariable UUID id, @RequestBody @Valid UpdateStaffCommand command) {
         staffUseCase.updateStaff(id, command);
         return ResponseEntity.ok().build();
     }
@@ -59,13 +60,24 @@ public class StaffController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStaff(@PathVariable UUID id) {
+        staffUseCase.deleteStaff(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/search")
-    public ResponseEntity<List<StaffDto>> searchStaff(@RequestParam(required = false) String query) {
-        return ResponseEntity.ok(staffUseCase.searchStaff(query).stream().map(StaffDto::fromDomain).collect(Collectors.toList()));
+    public ResponseEntity<List<StaffDto>> searchStaff(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String specialization,
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) Boolean active) {
+        return ResponseEntity.ok(staffUseCase.searchStaff(firstName, lastName, specialization, role, active).stream().map(StaffDto::fromDomain).collect(Collectors.toList()));
     }
 }
 
-record StaffDto(UUID id, String role, String firstName, String lastName, String email, boolean active, String specialization, String pwz, String department, String position) {
+record StaffDto(UUID id, String role, String firstName, String lastName, String email, boolean active, String specialization, String pwz, String department, String position, String workSchedule) {
     static StaffDto fromDomain(StaffMember staff) {
         return new StaffDto(
                 staff.getId(),
@@ -77,7 +89,8 @@ record StaffDto(UUID id, String role, String firstName, String lastName, String 
                 staff.getSpecialization(),
                 staff.getPwz(),
                 staff.getDepartment(),
-                staff.getPosition()
+                staff.getPosition(),
+                staff.getWorkSchedule()
         );
     }
 }
