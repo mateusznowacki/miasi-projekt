@@ -72,6 +72,28 @@
             "description": "OK"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "staff-controller"
+        ],
+        "operationId": "deleteStaff",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/schedules/{doctorId}/slots/{slotId}": {
@@ -113,6 +135,107 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "schedule-controller"
+        ],
+        "operationId": "removeSlot",
+        "parameters": [
+          {
+            "name": "doctorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "slotId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/patients/{patientId}": {
+      "get": {
+        "tags": [
+          "patient-controller"
+        ],
+        "operationId": "getPatientProfile",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Patient"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "patient-controller"
+        ],
+        "operationId": "updatePersonalData",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePersonalDataReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -337,6 +460,72 @@
         }
       }
     },
+    "/api/patients/{patientId}/medical-records": {
+      "get": {
+        "tags": [
+          "patient-controller"
+        ],
+        "operationId": "getMedicalHistory",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MedicalRecord"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "patient-controller"
+        ],
+        "operationId": "addMedicalRecord",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMedicalRecordReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/patients/register": {
       "post": {
         "tags": [
@@ -366,6 +555,29 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "logout",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -423,6 +635,41 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "doctorId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -465,6 +712,41 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "patientId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -492,11 +774,43 @@
         "operationId": "searchStaff",
         "parameters": [
           {
-            "name": "query",
+            "name": "firstName",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "lastName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "specialization",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -540,6 +854,30 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -549,6 +887,63 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ScheduleDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/schedules/available": {
+      "get": {
+        "tags": [
+          "available-slot-controller"
+        ],
+        "operationId": "getAvailableSlots",
+        "parameters": [
+          {
+            "name": "specialization",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "doctorLastName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AvailableSlotDto"
+                  }
                 }
               }
             }
@@ -604,7 +999,31 @@
         "operationId": "searchPatients",
         "parameters": [
           {
-            "name": "query",
+            "name": "firstName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lastName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pesel",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "patientCardNumber",
             "in": "query",
             "required": false,
             "schema": {
@@ -635,6 +1054,24 @@
           "doctor-controller"
         ],
         "operationId": "listDoctors",
+        "parameters": [
+          {
+            "name": "specialization",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -651,6 +1088,29 @@
           }
         }
       }
+    },
+    "/api/auth/activate": {
+      "get": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "activate",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -659,13 +1119,16 @@
         "type": "object",
         "properties": {
           "firstName": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "active": {
             "type": "boolean"
@@ -674,12 +1137,16 @@
             "type": "string"
           },
           "pwz": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^[1-9]\\d{6}$"
           },
           "department": {
             "type": "string"
           },
           "position": {
+            "type": "string"
+          },
+          "workSchedule": {
             "type": "string"
           }
         }
@@ -708,11 +1175,37 @@
           }
         }
       },
+      "UpdatePersonalDataReq": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
       "UpdateMedicalRecordReq": {
         "type": "object",
         "properties": {
           "diagnoses": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "symptoms": {
             "type": "string"
@@ -721,6 +1214,9 @@
             "type": "string"
           },
           "notes": {
+            "type": "string"
+          },
+          "testResults": {
             "type": "string"
           }
         }
@@ -764,27 +1260,37 @@
             ]
           },
           "firstName": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "specialization": {
             "type": "string"
           },
           "pwz": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^[1-9]\\d{6}$"
           },
           "department": {
             "type": "string"
           },
           "position": {
             "type": "string"
+          },
+          "workSchedule": {
+            "type": "string"
           }
-        }
+        },
+        "required": [
+          "role"
+        ]
       },
       "AddSlotCommand": {
         "type": "object",
@@ -808,26 +1314,61 @@
           }
         }
       },
+      "AddMedicalRecordReq": {
+        "type": "object",
+        "properties": {
+          "visitId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "doctorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "diagnoses": {
+            "type": "string",
+            "minLength": 1
+          },
+          "symptoms": {
+            "type": "string"
+          },
+          "prescriptions": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "testResults": {
+            "type": "string"
+          }
+        }
+      },
       "RegisterReq": {
         "type": "object",
         "properties": {
           "firstName": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "pesel": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "phone": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           }
         }
       },
@@ -862,30 +1403,35 @@
       "VisitDto": {
         "type": "object",
         "properties": {
-          "visitId": {
+          "id": {
             "type": "string",
             "format": "uuid"
           },
-          "patientId": {
-            "type": "string",
-            "format": "uuid"
+          "date": {
+            "type": "string"
           },
           "doctorId": {
             "type": "string",
             "format": "uuid"
           },
-          "type": {
+          "doctorName": {
+            "type": "string"
+          },
+          "patientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientName": {
             "type": "string"
           },
           "status": {
             "type": "string"
           },
-          "slotIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            }
+          "type": {
+            "type": "string"
+          },
+          "room": {
+            "type": "string"
           }
         }
       },
@@ -921,6 +1467,9 @@
             "type": "string"
           },
           "position": {
+            "type": "string"
+          },
+          "workSchedule": {
             "type": "string"
           }
         }
@@ -962,6 +1511,39 @@
           }
         }
       },
+      "AvailableSlotDto": {
+        "type": "object",
+        "properties": {
+          "slotId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "doctorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "doctorFirstName": {
+            "type": "string"
+          },
+          "doctorLastName": {
+            "type": "string"
+          },
+          "specialization": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "office": {
+            "type": "string"
+          }
+        }
+      },
       "DoctorId": {
         "type": "object",
         "properties": {
@@ -997,9 +1579,19 @@
           "notes": {
             "type": "string"
           },
+          "testResults": {
+            "type": "string"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/DoctorId"
           }
         }
       },
@@ -1022,6 +1614,9 @@
             "type": "string"
           },
           "email": {
+            "type": "string"
+          },
+          "address": {
             "type": "string"
           },
           "medicalRecords": {
