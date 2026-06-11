@@ -43,7 +43,12 @@ public class PatientRepositoryAdapter implements PatientRepository {
             re.setUpdatedBy(r.getUpdatedBy() != null ? r.getUpdatedBy().value() : null);
             return re;
         }).collect(Collectors.toList());
-        e.setRecords(recs);
+        if (e.getRecords() == null) {
+            e.setRecords(recs);
+        } else {
+            e.getRecords().clear();
+            e.getRecords().addAll(recs);
+        }
         repo.save(e);
     }
 

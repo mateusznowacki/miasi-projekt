@@ -48,7 +48,7 @@ public class PatientController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN_STAFF', 'ADMIN') or authentication.principal.equals(#patientId.toString())")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN_STAFF', 'ADMIN') or authentication.name == #patientId.toString()")
     @GetMapping("/{patientId}/medical-records/visit/{visitId}")
     public ResponseEntity<pl.MiASI.patient.domain.model.MedicalRecord> getMedicalRecordByVisitId(@PathVariable UUID patientId, @PathVariable UUID visitId) {
         return patientUseCase.getMedicalRecordByVisitId(new PatientId(patientId), visitId)
@@ -56,7 +56,7 @@ public class PatientController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN_STAFF', 'ADMIN') or authentication.principal.equals(#patientId.toString())")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN_STAFF', 'ADMIN') or authentication.name == #patientId.toString()")
     @GetMapping("/{patientId}")
     public ResponseEntity<pl.MiASI.patient.domain.model.Patient> getPatientProfile(@PathVariable UUID patientId) {
         return patientUseCase.getPatientProfile(new PatientId(patientId))
@@ -64,7 +64,7 @@ public class PatientController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN_STAFF', 'ADMIN') or authentication.principal.equals(#patientId.toString())")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN_STAFF', 'ADMIN') or authentication.name == #patientId.toString()")
     @PutMapping("/{patientId}")
     public ResponseEntity<?> updatePersonalData(@PathVariable UUID patientId, @Valid @RequestBody UpdatePersonalDataReq req) {
         try {
@@ -75,7 +75,7 @@ public class PatientController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN_STAFF', 'ADMIN') or authentication.principal.equals(#patientId.toString())")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN_STAFF', 'ADMIN') or authentication.name == #patientId.toString()")
     @GetMapping("/{patientId}/medical-records")
     public ResponseEntity<java.util.List<pl.MiASI.patient.domain.model.MedicalRecord>> getMedicalHistory(@PathVariable UUID patientId) {
         return patientUseCase.getPatientProfile(new PatientId(patientId))
@@ -123,7 +123,7 @@ record UpdatePersonalDataReq(
         @NotBlank String lastName,
         @NotBlank String phone,
         @NotBlank @Email String email,
-        @NotBlank String address
+        String address
 ) {
 }
 

@@ -19,7 +19,7 @@ public class VisitEventListener {
     private final VisitManagementUseCase visitManagementUseCase;
     private final VisitRepository visitRepository;
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void onVisitCanceled(VisitCanceledEvent event) {
         visitRepository.findById(event.visitId()).ifPresent(visit -> {
             scheduleManagementUseCase.freeSlots(visit.getDoctorId(), event.slotIds());
@@ -32,7 +32,7 @@ public class VisitEventListener {
         visitManagementUseCase.completeVisit(event.visitId());
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void onVisitReserved(pl.MiASI.medicalcare.domain.event.VisitReservedEvent event) {
         visitRepository.findById(event.visitId()).ifPresent(visit -> {
             System.out.println("[Powiadomienie] Wysyłanie potwierdzenia o rezerwacji wizyty " + event.visitId().value() + " do pacjenta: " + visit.getPatientId().value());

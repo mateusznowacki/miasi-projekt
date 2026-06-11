@@ -21,7 +21,11 @@ public class ScheduleRepositoryAdapter implements ScheduleRepository {
         entity.setId(schedule.scheduleId().value());
         entity.setDoctorId(schedule.doctorId().value());
 
-        entity.setSlots(schedule.slots().stream().map(slot -> {
+        if (entity.getSlots() == null) {
+            entity.setSlots(new java.util.ArrayList<>());
+        }
+        entity.getSlots().clear();
+        entity.getSlots().addAll(schedule.slots().stream().map(slot -> {
             SlotJpaEntity slotEntity = new SlotJpaEntity();
             slotEntity.setId(slot.getSlotId().value());
             slotEntity.setStartTime(slot.getTimeRange().startTime());

@@ -49,6 +49,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({org.springframework.security.access.AccessDeniedException.class, org.springframework.security.authorization.AuthorizationDeniedException.class})
+    public ResponseEntity<Map<String, Object>> handleAccessDeniedException(Exception ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        body.put("error", "Forbidden");
+        body.put("message", "Brak dostępu: " + ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
         Map<String, Object> body = new HashMap<>();

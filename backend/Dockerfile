@@ -17,3 +17,6 @@ FROM eclipse-temurin:21-jre-alpine
 VOLUME /tmp
 COPY --from=build /workspace/app/target/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
+
+
+eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmZDI5OTc4OS0wZTFjLTQyZDQtYmYwYy0zMTU1ZDJjNmNkODYiLCJyb2xlIjoiUEFUSUVOVCIsImlhdCI6MTc4MTIwNTU5OCwiZXhwIjoxNzgxMjkxOTk4fQ.q8HPumtgeI5c6gUJieNzaJjX543HzrGuswjs-d2HK_s

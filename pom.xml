@@ -31,6 +31,11 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
@@ -41,6 +46,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
 		<dependency>
@@ -90,6 +99,11 @@
 	<build>
 		<sourceDirectory>backend/main.src/java</sourceDirectory>
 		<testSourceDirectory>backend/test/java</testSourceDirectory>
+		<testResources>
+			<testResource>
+				<directory>backend/test/resources</directory>
+			</testResource>
+		</testResources>
 		<resources>
 			<resource>
 				<directory>backend/main.src/resources</directory>
