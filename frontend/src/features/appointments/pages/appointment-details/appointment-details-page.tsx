@@ -8,18 +8,28 @@ import { PageHeader } from "@/shared/components/page-header";
 import { AppointmentStatusBadge } from "@/shared/components/status-badge";
 import { useAuth } from "@/shared/auth/use-auth";
 import { formatDate, formatTime } from "@/shared/lib/format-date";
+import type { AppointmentStatus } from "@/shared/types/appointment";
 import { useAppointment } from "./api/use-appointment";
 import { CancelAppointmentDrawer } from "./components/cancel-appointment-drawer";
 import { ConductVisitDrawer } from "./components/conduct-visit-drawer";
 import { DetailRow } from "./components/detail-row";
 import { MedicalRecordView } from "./components/medical-record-view";
 
+const CONSULTATION_LABELS: Record<string, string> = {
+  GENERAL: "Konsultacja",
+  FOLLOW_UP: "Kontrola",
+  SPECIALIST: "Badanie",
+};
+
 const route = getRouteApi("/_app/appointments/$id");
 
 export function AppointmentDetailsPage() {
   const auth = useAuth();
   const { id } = route.useParams();
-  const { data, isPending, isError, error } = useAppointment(id);
+  const { patientId: patientIdFromSearch } = route.useSearch();
+  const { data, isPending, isError, error } = useAppointment(id, {
+    patientId: patientIdFromSearch,
+  });
 
   if (isPending) {
     return (
@@ -30,14 +40,18 @@ export function AppointmentDetailsPage() {
     );
   }
 
-  if (isError) {
-    return <p className="text-sm text-destructive">{error.message}</p>;
+  if (isError || !data?.id) {
+    return <p className="text-sm text-destructive">{error?.message ?? "Nie znaleziono wizyty"}</p>;
   }
 
-  const isBooked = data.status === "Zarezerwowana";
-  const isCompleted = data.status === "Zakończona";
+  const visitId = data.id;
+  const patientId = data.patientId ?? patientIdFromSearch ?? "";
+  const status = data.status as AppointmentStatus;
+  const isBooked = status === "Zarezerwowana";
+  const isCompleted = status === "Zakończona";
   const canCancel = isBooked && (auth?.role === "patient" || auth?.role === "admin_staff");
-  const canConduct = isBooked && auth?.role === "doctor";
+  const canConduct = isBooked && auth?.role === "doctor" && Boolean(data.doctorId);
+  const consultationLabel = CONSULTATION_LABELS[data.type ?? ""] ?? data.type ?? "—";
 
   return (
     <div className="space-y-6">
@@ -52,34 +66,40 @@ export function AppointmentDetailsPage() {
         title="Szczegóły wizyty"
         actions={
           <div className="flex items-center gap-2">
-            {canCancel && <CancelAppointmentDrawer appointmentId={data.id} />}
-            {canConduct && <ConductVisitDrawer appointmentId={data.id} />}
+            {canCancel && <CancelAppointmentDrawer appointmentId={visitId} />}
+            {canConduct && data.doctorId && (
+              <ConductVisitDrawer
+                patientId={patientId}
+                visitId={visitId}
+                doctorId={data.doctorId}
+              />
+            )}
           </div>
         }
       />
 
       <Card>
         <CardHeader className="flex-row items-center justify-between">
-          <CardTitle>{data.type}</CardTitle>
-          <AppointmentStatusBadge status={data.status} />
+          <CardTitle>{consultationLabel}</CardTitle>
+          <AppointmentStatusBadge status={status} />
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <DetailRow icon={CalendarDays} label="Data" value={formatDate(data.date)} />
-          <DetailRow icon={Clock} label="Godzina" value={formatTime(data.date)} />
-          <DetailRow icon={Stethoscope} label="Lekarz" value={data.doctorName} />
-          <DetailRow icon={User} label="Pacjent" value={data.patientName} />
-          <DetailRow icon={MapPin} label="Gabinet" value={data.room} />
+          <DetailRow icon={CalendarDays} label="Data" value={formatDate(data.date ?? "")} />
+          <DetailRow icon={Clock} label="Godzina" value={formatTime(data.date ?? "")} />
+          <DetailRow icon={Stethoscope} label="Lekarz" value={data.doctorName ?? "—"} />
+          <DetailRow icon={User} label="Pacjent" value={data.patientName ?? "—"} />
+          <DetailRow icon={MapPin} label="Gabinet" value={data.room ?? "—"} />
         </CardContent>
       </Card>
 
-      {isCompleted && (
+      {isCompleted && patientId && (
         <Card>
           <CardHeader>
             <CardTitle>Rekord medyczny</CardTitle>
           </CardHeader>
           <CardContent>
             <Separator className="mb-4" />
-            <MedicalRecordView appointmentId={data.id} />
+            <MedicalRecordView patientId={patientId} visitId={visitId} />
           </CardContent>
         </Card>
       )}

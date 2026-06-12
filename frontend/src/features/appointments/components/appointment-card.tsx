@@ -23,6 +23,7 @@ export function AppointmentCard({
     <Link
       to="/appointments/$id"
       params={{ id: appointment.id }}
+      search={{ patientId: appointment.patientId }}
       className="group flex items-center gap-4 rounded-xl border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-accent/40"
     >
       <div className="flex size-11 shrink-0 flex-col items-center justify-center rounded-lg bg-primary/10 text-primary">

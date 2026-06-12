@@ -16,13 +16,21 @@ import {
 } from "@/shared/components/medical-record-form";
 import { useCreateMedicalRecord } from "../api/use-create-medical-record";
 
-export function ConductVisitDrawer({ appointmentId }: { appointmentId: string }) {
+export function ConductVisitDrawer({
+  patientId,
+  visitId,
+  doctorId,
+}: {
+  patientId: string;
+  visitId: string;
+  doctorId: string;
+}) {
   const [open, setOpen] = useState(false);
   const createRecord = useCreateMedicalRecord();
 
   function handleSubmit(values: MedicalRecordFormValues) {
     createRecord.mutate(
-      { appointmentId, ...values },
+      { patientId, visitId, doctorId, ...values },
       {
         onSuccess: () => {
           toast.success("Rekord medyczny zapisany, wizyta zakończona");

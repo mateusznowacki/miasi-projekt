@@ -77,7 +77,11 @@ export function BookAppointmentPage() {
       {
         onSuccess: (res) => {
           toast.success("Wizyta została zarezerwowana");
-          navigate({ to: "/appointments/$id", params: { id: res.appointmentId } });
+          navigate({
+            to: "/appointments/$id",
+            params: { id: res.appointmentId },
+            search: { patientId },
+          });
         },
         onError: (error) => toast.error(error.message),
       },

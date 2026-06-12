@@ -3,6 +3,9 @@ import { AppointmentDetailsPage } from "@/features/appointments/pages/appointmen
 import { requireRole } from "@/shared/auth/require-role";
 
 export const Route = createFileRoute("/_app/appointments/$id")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    patientId: typeof search.patientId === "string" ? search.patientId : undefined,
+  }),
   beforeLoad: () => {
     requireRole(["patient", "doctor", "admin_staff"]);
   },

@@ -1,7 +1,6 @@
 import type { AuthUser } from "../types/auth-user";
 import type { Role } from "../types/role";
 import type { Appointment } from "../types/appointment";
-import type { MedicalRecord } from "../types/medical-record";
 import type { Patient } from "../types/patient";
 import type { Slot } from "../types/slot";
 import type { StaffMember } from "../types/staff-member";
@@ -211,19 +210,6 @@ const appointments: Appointment[] = [
     status: "Zakończona",
     type: "Badanie",
     room: "Gabinet 7",
-  },
-];
-
-const medicalRecords: MedicalRecord[] = [
-  {
-    id: "mr1",
-    appointmentId: "a3",
-    patientId: "p1",
-    diagnoses: "Nadciśnienie tętnicze samoistne (I10)",
-    symptoms: "Bóle głowy, podwyższone ciśnienie tętnicze",
-    prescriptions: "Ramipril 5mg 1x dziennie",
-    notes: "Kontrola za 3 miesiące, zalecana dieta niskosodowa.",
-    createdAt: isoAt(-14, 9, 30),
   },
 ];
 
@@ -441,67 +427,11 @@ export async function dbDeleteSlot(slotId: string): Promise<{ id: string }> {
 
 // ---- Appointments ----------------------------------------------------------
 
-export async function dbGetAppointment(id: string): Promise<Appointment> {
-  const appointment = appointments.find((a) => a.id === id);
-  if (!appointment) throw new Error("Nie znaleziono wizyty");
-  return delay(appointment);
-}
-
 export async function dbListAppointmentsByPatient(patientId: string): Promise<Appointment[]> {
   const result = appointments
     .filter((a) => a.patientId === patientId)
     .sort((a, b) => b.date.localeCompare(a.date));
   return delay(result);
-}
-
-export async function dbCancelAppointment(id: string): Promise<Appointment> {
-  const appointment = appointments.find((a) => a.id === id);
-  if (!appointment) throw new Error("Nie znaleziono wizyty");
-  appointment.status = "Anulowana";
-  // Free the matching slot in the schedule.
-  const slot = slots.find(
-    (s) => s.doctorId === appointment.doctorId && s.startTime === appointment.date,
-  );
-  if (slot) slot.status = "Wolny";
-  return delay(appointment);
-}
-
-// ---- Medical records -------------------------------------------------------
-
-export async function dbGetMedicalRecordByAppointment(
-  appointmentId: string,
-): Promise<MedicalRecord | null> {
-  const record = medicalRecords.find((r) => r.appointmentId === appointmentId) ?? null;
-  return delay(record);
-}
-
-export interface CreateMedicalRecordInput {
-  appointmentId: string;
-  diagnoses: string;
-  symptoms: string;
-  prescriptions: string;
-  notes: string;
-}
-
-export async function dbCreateMedicalRecord(
-  input: CreateMedicalRecordInput,
-): Promise<MedicalRecord> {
-  const appointment = appointments.find((a) => a.id === input.appointmentId);
-  if (!appointment) throw new Error("Nie znaleziono wizyty");
-  const record: MedicalRecord = {
-    id: nextId("mr"),
-    appointmentId: input.appointmentId,
-    patientId: appointment.patientId,
-    diagnoses: input.diagnoses,
-    symptoms: input.symptoms,
-    prescriptions: input.prescriptions,
-    notes: input.notes,
-    createdAt: new Date().toISOString(),
-  };
-  medicalRecords.push(record);
-  // Creating a record closes the appointment.
-  appointment.status = "Zakończona";
-  return delay(record);
 }
 
 // ---- Staff -----------------------------------------------------------------

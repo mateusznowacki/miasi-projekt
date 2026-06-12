@@ -5,8 +5,14 @@ import { formatDateTime } from "@/shared/lib/format-date";
 import { useMedicalRecord } from "../api/use-medical-record";
 import { RecordField } from "./record-field";
 
-export function MedicalRecordView({ appointmentId }: { appointmentId: string }) {
-  const { data, isPending, isError, error } = useMedicalRecord(appointmentId);
+export function MedicalRecordView({
+  patientId,
+  visitId,
+}: {
+  patientId: string;
+  visitId: string;
+}) {
+  const { data, isPending, isError, error } = useMedicalRecord(patientId, visitId);
 
   if (isPending) {
     return (
@@ -32,12 +38,12 @@ export function MedicalRecordView({ appointmentId }: { appointmentId: string }) 
   return (
     <div className="space-y-4">
       <p className="text-xs text-muted-foreground">
-        Utworzono: {formatDateTime(data.createdAt)}
+        Utworzono: {data.createdAt ? formatDateTime(data.createdAt) : "—"}
       </p>
-      <RecordField label="Objawy" value={data.symptoms} />
-      <RecordField label="Rozpoznanie" value={data.diagnoses} />
-      <RecordField label="Zalecenia / recepty" value={data.prescriptions} />
-      <RecordField label="Notatki" value={data.notes} />
+      <RecordField label="Objawy" value={data.symptoms ?? ""} />
+      <RecordField label="Rozpoznanie" value={data.diagnoses ?? ""} />
+      <RecordField label="Zalecenia / recepty" value={data.prescriptions ?? ""} />
+      <RecordField label="Notatki" value={data.notes ?? ""} />
     </div>
   );
 }
