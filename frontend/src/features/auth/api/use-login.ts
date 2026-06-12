@@ -1,18 +1,19 @@
 import { useMutation } from "@tanstack/react-query";
+import { login } from "@/client";
 import { setAuth } from "@/shared/auth/auth-store";
-import { apiClient } from "@/shared/api/api-client";
-import type { AuthUser } from "@/shared/types/auth-user";
+import { mapAuthResult } from "../types/map-auth-result";
 
 export function useLogin() {
   return useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      return apiClient("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-      }) as Promise<AuthUser>;
+      const { data } = await login({
+        body: { email, password },
+        throwOnError: true,
+      });
+      return data;
     },
-    onSuccess: (user) => {
-      setAuth(user);
+    onSuccess: (result) => {
+      setAuth(mapAuthResult(result));
     },
   });
 }

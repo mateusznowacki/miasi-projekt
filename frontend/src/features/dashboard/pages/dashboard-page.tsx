@@ -1,4 +1,5 @@
 import { useAuth } from "@/shared/auth/use-auth";
+import { getAuthDisplayName } from "@/shared/types/auth-user";
 import { ROLE_LABELS } from "@/shared/types/role";
 import { QuickLinks } from "../components/quick-links";
 import { DashboardUpcoming } from "../components/dashboard-upcoming";
@@ -14,7 +15,7 @@ export function DashboardPage() {
       <section className="rounded-2xl border bg-linear-to-br from-primary/10 via-card to-card p-6">
         <p className="text-sm font-medium text-primary">{ROLE_LABELS[auth.role]}</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight">
-          Witaj, {auth.firstName} {auth.lastName}
+          Witaj, {getAuthDisplayName(auth)}
         </h1>
         <p className="mt-2 max-w-prose text-sm text-muted-foreground">
           Zarządzaj wizytami, harmonogramem i danymi pacjentów w jednym miejscu.

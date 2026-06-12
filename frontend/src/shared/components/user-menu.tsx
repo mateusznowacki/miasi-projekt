@@ -10,21 +10,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { clearAuth } from "@/shared/auth/auth-store";
+import { useLogout } from "@/features/auth/api/use-logout";
 import { useAuth } from "@/shared/auth/use-auth";
+import { getAuthDisplayName, getAuthInitials } from "@/shared/types/auth-user";
 import { ROLE_LABELS } from "@/shared/types/role";
 
 export function UserMenu() {
   const auth = useAuth();
   const navigate = useNavigate();
+  const logout = useLogout();
 
   if (!auth) return null;
 
-  const initials = `${auth.firstName.charAt(0)}${auth.lastName.charAt(0)}`.toUpperCase();
+  const displayName = getAuthDisplayName(auth);
+  const initials = getAuthInitials(auth);
 
   function handleLogout() {
-    clearAuth();
-    navigate({ to: "/login" });
+    logout.mutate(undefined, { onSettled: () => navigate({ to: "/login" }) });
   }
 
   return (
@@ -36,16 +38,12 @@ export function UserMenu() {
               {initials}
             </AvatarFallback>
           </Avatar>
-          <span className="hidden text-sm font-medium sm:inline">
-            {auth.firstName} {auth.lastName}
-          </span>
+          <span className="hidden text-sm font-medium sm:inline">{displayName}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="flex flex-col gap-0.5">
-          <span>
-            {auth.firstName} {auth.lastName}
-          </span>
+          <span>{displayName}</span>
           <span className="text-xs font-normal text-muted-foreground">
             {ROLE_LABELS[auth.role]}
           </span>
