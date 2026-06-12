@@ -359,12 +359,6 @@ export async function dbListStaff(filters: {
   return delay(result);
 }
 
-export async function dbGetStaff(id: string): Promise<StaffMember> {
-  const member = staff.find((s) => s.id === id);
-  if (!member) throw new Error("Nie znaleziono pracownika");
-  return delay(member);
-}
-
 export type CreateStaffInput = Omit<StaffMember, "id" | "active">;
 
 export async function dbCreateStaff(input: CreateStaffInput): Promise<{ staffId: string }> {

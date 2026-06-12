@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { InfoRow } from "@/shared/components/info-row";
 import { PageHeader } from "@/shared/components/page-header";
-import { ROLE_LABELS } from "@/shared/types/role";
 import { useAuth } from "@/shared/auth/use-auth";
-import { useStaffMember } from "../api/use-staff-member";
+import { useStaffMember } from "@/shared/api/use-staff-member";
+import { getStaffRoleLabel, mapStaffRole } from "@/shared/types/map-staff-role";
 import { DeactivateStaffDrawer } from "../components/deactivate-staff-drawer";
 
 const route = getRouteApi("/_app/staff/$id/");
@@ -28,9 +28,11 @@ export function StaffProfilePage() {
     );
   }
 
-  if (isError) return <p className="text-sm text-destructive">{error.message}</p>;
+  if (isError || !data) {
+    return <p className="text-sm text-destructive">{error?.message ?? "Nie znaleziono pracownika"}</p>;
+  }
 
-  const isDoctor = data.role === "doctor";
+  const isDoctor = mapStaffRole(data.role) === "doctor";
 
   return (
     <div className="space-y-6">
@@ -42,8 +44,8 @@ export function StaffProfilePage() {
       </Button>
 
       <PageHeader
-        title={`${isDoctor ? "dr " : ""}${data.firstName} ${data.lastName}`}
-        description={ROLE_LABELS[data.role]}
+        title={`${isDoctor ? "dr " : ""}${data.firstName ?? ""} ${data.lastName ?? ""}`}
+        description={getStaffRoleLabel(data.role)}
         actions={
           isAdmin ? (
             <div className="flex items-center gap-2">
@@ -73,9 +75,9 @@ export function StaffProfilePage() {
           </Badge>
         </CardHeader>
         <CardContent>
-          <InfoRow label="Imię i nazwisko" value={`${data.firstName} ${data.lastName}`} />
-          <InfoRow label="Email" value={data.email} />
-          <InfoRow label="Rola" value={ROLE_LABELS[data.role]} />
+          <InfoRow label="Imię i nazwisko" value={`${data.firstName ?? ""} ${data.lastName ?? ""}`} />
+          <InfoRow label="Email" value={data.email ?? "—"} />
+          <InfoRow label="Rola" value={getStaffRoleLabel(data.role)} />
           {isDoctor ? (
             <>
               <InfoRow label="Specjalizacja" value={data.specialization ?? ""} />

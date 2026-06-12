@@ -13,7 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FormField } from "@/shared/components/form-field";
+import type { StaffDto } from "@/client";
 import type { StaffMember } from "@/shared/types/staff-member";
+import { mapStaffRole } from "@/shared/types/map-staff-role";
 import { useCreateStaff } from "../api/use-create-staff";
 import { useUpdateStaff } from "../api/use-update-staff";
 
@@ -38,9 +40,9 @@ const schema = z
     }
   });
 
-function initialValues(member?: StaffMember) {
+function initialValues(member?: StaffMember | StaffDto) {
   return {
-    role: member?.role ?? ("doctor" as StaffMember["role"]),
+    role: mapStaffRole(member?.role) ?? ("doctor" as StaffMember["role"]),
     firstName: member?.firstName ?? "",
     lastName: member?.lastName ?? "",
     email: member?.email ?? "",
@@ -51,7 +53,7 @@ function initialValues(member?: StaffMember) {
   };
 }
 
-export function StaffForm({ initial }: { initial?: StaffMember }) {
+export function StaffForm({ initial }: { initial?: StaffMember | StaffDto }) {
   const navigate = useNavigate();
   const createStaff = useCreateStaff();
   const updateStaff = useUpdateStaff(initial?.id ?? "");
@@ -93,7 +95,7 @@ export function StaffForm({ initial }: { initial?: StaffMember }) {
       updateStaff.mutate(payload, {
         onSuccess: () => {
           toast.success("Dane pracownika zaktualizowane");
-          navigate({ to: "/staff/$id", params: { id: initial.id } });
+          navigate({ to: "/staff/$id", params: { id: initial.id ?? "" } });
         },
         onError: (error) => toast.error(error.message),
       });

@@ -89,7 +89,9 @@ export function AppSidebar() {
             <Activity className="size-5" />
           </div>
           <div className="leading-tight">
-            <p className="text-base font-semibold tracking-tight">Medflow</p>
+            <Link to="/" className="text-base font-semibold tracking-tight hover:underline focus:underline">
+              Medflow
+            </Link>
             <p className="text-xs text-muted-foreground">Opieka medyczna</p>
           </div>
         </div>

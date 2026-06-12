@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/shared/components/page-header";
 import { formatDate } from "@/shared/lib/format-date";
-import { useStaffMember } from "@/features/staff/api/use-staff-member";
+import { useStaffMember } from "@/shared/api/use-staff-member";
 import { ScheduleDayView } from "../components/schedule-day-view";
 
 const route = getRouteApi("/_app/schedule/$doctorId");

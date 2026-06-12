@@ -1,4 +1,4 @@
-import { Outlet } from "@tanstack/react-router";
+import { Link, Outlet } from "@tanstack/react-router";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,7 +14,9 @@ export function AppShell() {
           <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/80 px-4 backdrop-blur">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-5!" />
-            <span className="text-sm font-medium text-muted-foreground">Medflow</span>
+            <Link to="/" className="text-base font-semibold tracking-tight hover:underline focus:underline">
+              Medflow
+            </Link>
             <div className="ml-auto flex items-center gap-2">
               <UserMenu />
             </div>
