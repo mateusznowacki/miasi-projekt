@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/shared/components/page-header";
-import { StaffForm } from "../components/staff-form";
+import { StaffForm } from "../../components/staff-form";
 
 export function StaffCreatePage() {
   return (

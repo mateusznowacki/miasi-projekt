@@ -16,3 +16,7 @@ export function getStaffRoleLabel(role?: string): string {
   const mapped = mapStaffRole(role);
   return mapped ? ROLE_LABELS[mapped] : (role ?? "—");
 }
+
+export function toBackendStaffRole(role: StaffRole): "DOCTOR" | "ADMIN_STAFF" {
+  return role === "doctor" ? "DOCTOR" : "ADMIN_STAFF";
+}

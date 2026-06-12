@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/shared/components/page-header";
 import { useStaffMember } from "@/shared/api/use-staff-member";
-import { StaffForm } from "../components/staff-form";
+import { StaffForm } from "../../components/staff-form";
 
 const route = getRouteApi("/_app/staff/$id/edit");
 

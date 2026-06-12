@@ -2,17 +2,18 @@ import { Link } from "@tanstack/react-router";
 import { ChevronRight, Stethoscope, UserCog } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { StaffMember } from "@/shared/types/staff-member";
+import type { StaffDto } from "@/client";
+import { mapStaffRole } from "@/shared/types/map-staff-role";
 
-export function StaffCard({ member }: { member: StaffMember }) {
-  const isDoctor = member.role === "doctor";
+export function StaffCard({ member }: { member: StaffDto }) {
+  const isDoctor = mapStaffRole(member.role) === "doctor";
   const Icon = isDoctor ? Stethoscope : UserCog;
   const subtitle = isDoctor ? member.specialization : member.position;
 
   return (
     <Link
       to="/staff/$id"
-      params={{ id: member.id }}
+      params={{ id: member.id ?? "" }}
       className="group flex items-center gap-4 rounded-xl border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-accent/40"
     >
       <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -24,7 +25,7 @@ export function StaffCard({ member }: { member: StaffMember }) {
             {isDoctor ? "dr " : ""}
             {member.firstName} {member.lastName}
           </p>
-          {!member.active && (
+          {member.active === false && (
             <Badge className="border-transparent bg-muted text-muted-foreground">Nieaktywny</Badge>
           )}
         </div>

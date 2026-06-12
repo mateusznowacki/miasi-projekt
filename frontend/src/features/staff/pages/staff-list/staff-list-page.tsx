@@ -15,8 +15,8 @@ import { ListSkeleton } from "@/shared/components/list-skeleton";
 import { PageHeader } from "@/shared/components/page-header";
 import { useAuth } from "@/shared/auth/use-auth";
 import type { StaffRole } from "@/shared/types/staff-member";
-import { useStaffList } from "../api/use-staff-list";
-import { StaffCard } from "../components/staff-card";
+import { StaffCard } from "../../components/staff-card";
+import { useStaffList } from "./api/use-staff-list";
 
 export function StaffListPage() {
   const auth = useAuth();
@@ -27,6 +27,8 @@ export function StaffListPage() {
     name,
     role: role === "all" ? undefined : role,
   });
+
+  const staff = data ?? [];
 
   return (
     <div>
@@ -71,7 +73,7 @@ export function StaffListPage() {
         <ListSkeleton count={4} />
       ) : isError ? (
         <p className="text-sm text-destructive">{error.message}</p>
-      ) : data.length === 0 ? (
+      ) : staff.length === 0 ? (
         <EmptyState
           icon={Users}
           title="Brak pracowników"
@@ -79,7 +81,7 @@ export function StaffListPage() {
         />
       ) : (
         <div className="flex flex-col gap-3">
-          {data.map((member) => (
+          {staff.map((member) => (
             <StaffCard key={member.id} member={member} />
           ))}
         </div>

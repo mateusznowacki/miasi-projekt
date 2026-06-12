@@ -1,10 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { dbDeactivateStaff } from "@/shared/api/mock-db";
+import { deactivateStaff } from "@/client";
 
 export function useDeactivateStaff() {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (id: string) => dbDeactivateStaff(id),
+    mutationFn: async (id: string) => {
+      await deactivateStaff({
+        path: { id },
+        throwOnError: true,
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["staff"] });
       queryClient.invalidateQueries({ queryKey: ["doctors"] });

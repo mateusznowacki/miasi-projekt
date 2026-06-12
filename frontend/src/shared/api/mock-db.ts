@@ -2,8 +2,6 @@ import type { AuthUser } from "../types/auth-user";
 import type { Role } from "../types/role";
 import type { Patient } from "../types/patient";
 import type { Slot } from "../types/slot";
-import type { StaffMember } from "../types/staff-member";
-
 const LATENCY = 250;
 
 export function delay<T>(value: T, ms = LATENCY): Promise<T> {
@@ -87,60 +85,6 @@ const patients: Patient[] = [
       chronicDiseases: "Brak",
       medications: "Brak",
     },
-  },
-];
-
-const staff: StaffMember[] = [
-  {
-    id: "d1",
-    role: "doctor",
-    firstName: "Anna",
-    lastName: "Kowalska",
-    email: "lekarz@medflow.pl",
-    active: true,
-    specialization: "Internista",
-    pwz: "1234567",
-    department: "Interna",
-  },
-  {
-    id: "d2",
-    role: "doctor",
-    firstName: "Piotr",
-    lastName: "Nowak",
-    email: "piotr.nowak@medflow.pl",
-    active: true,
-    specialization: "Kardiolog",
-    pwz: "2345678",
-    department: "Kardiologia",
-  },
-  {
-    id: "d3",
-    role: "doctor",
-    firstName: "Ewa",
-    lastName: "Lewandowska",
-    email: "ewa.lewandowska@medflow.pl",
-    active: true,
-    specialization: "Dermatolog",
-    pwz: "3456789",
-    department: "Dermatologia",
-  },
-  {
-    id: "s1",
-    role: "admin_staff",
-    firstName: "Katarzyna",
-    lastName: "Zielińska",
-    email: "rejestracja@medflow.pl",
-    active: true,
-    position: "Rejestratorka medyczna",
-  },
-  {
-    id: "s2",
-    role: "admin_staff",
-    firstName: "Marek",
-    lastName: "Wójcik",
-    email: "marek.wojcik@medflow.pl",
-    active: false,
-    position: "Koordynator recepcji",
   },
 ];
 
@@ -338,48 +282,3 @@ export async function dbDeleteSlot(slotId: string): Promise<{ id: string }> {
 }
 
 // ---- Appointments ----------------------------------------------------------
-
-// ---- Staff -----------------------------------------------------------------
-
-export async function dbListStaff(filters: {
-  role?: "doctor" | "admin_staff";
-  name?: string;
-  specialization?: string;
-}): Promise<StaffMember[]> {
-  const name = filters.name?.trim().toLowerCase() ?? "";
-  const specialization = filters.specialization?.trim().toLowerCase() ?? "";
-  const result = staff.filter((s) => {
-    const fullName = `${s.firstName} ${s.lastName}`.toLowerCase();
-    const matchesRole = !filters.role || s.role === filters.role;
-    const matchesName = name === "" || fullName.includes(name);
-    const matchesSpec =
-      specialization === "" || (s.specialization ?? "").toLowerCase().includes(specialization);
-    return matchesRole && matchesName && matchesSpec;
-  });
-  return delay(result);
-}
-
-export type CreateStaffInput = Omit<StaffMember, "id" | "active">;
-
-export async function dbCreateStaff(input: CreateStaffInput): Promise<{ staffId: string }> {
-  const id = nextId(input.role === "doctor" ? "d" : "s");
-  staff.push({ ...input, id, active: true });
-  return delay({ staffId: id });
-}
-
-export async function dbUpdateStaff(
-  id: string,
-  data: Partial<Omit<StaffMember, "id">>,
-): Promise<StaffMember> {
-  const member = staff.find((s) => s.id === id);
-  if (!member) throw new Error("Nie znaleziono pracownika");
-  Object.assign(member, data);
-  return delay(member);
-}
-
-export async function dbDeactivateStaff(id: string): Promise<StaffMember> {
-  const member = staff.find((s) => s.id === id);
-  if (!member) throw new Error("Nie znaleziono pracownika");
-  member.active = false;
-  return delay(member);
-}

@@ -9,7 +9,7 @@ import { PageHeader } from "@/shared/components/page-header";
 import { useAuth } from "@/shared/auth/use-auth";
 import { useStaffMember } from "@/shared/api/use-staff-member";
 import { getStaffRoleLabel, mapStaffRole } from "@/shared/types/map-staff-role";
-import { DeactivateStaffDrawer } from "../components/deactivate-staff-drawer";
+import { DeactivateStaffDrawer } from "./components/deactivate-staff-drawer";
 
 const route = getRouteApi("/_app/staff/$id/");
 

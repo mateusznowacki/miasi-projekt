@@ -12,12 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FormField } from "@/shared/components/form-field";
 import type { StaffDto } from "@/client";
-import type { StaffMember } from "@/shared/types/staff-member";
+import { FormField } from "@/shared/components/form-field";
+import type { StaffRole } from "@/shared/types/staff-member";
 import { mapStaffRole } from "@/shared/types/map-staff-role";
-import { useCreateStaff } from "../api/use-create-staff";
-import { useUpdateStaff } from "../api/use-update-staff";
+import { useCreateStaff } from "../pages/staff-create/api/use-create-staff";
+import { useUpdateStaff } from "../pages/staff-edit/api/use-update-staff";
 
 const schema = z
   .object({
@@ -40,9 +40,9 @@ const schema = z
     }
   });
 
-function initialValues(member?: StaffMember | StaffDto) {
+function initialValues(member?: StaffDto) {
   return {
-    role: mapStaffRole(member?.role) ?? ("doctor" as StaffMember["role"]),
+    role: mapStaffRole(member?.role) ?? ("doctor" as StaffRole),
     firstName: member?.firstName ?? "",
     lastName: member?.lastName ?? "",
     email: member?.email ?? "",
@@ -53,7 +53,7 @@ function initialValues(member?: StaffMember | StaffDto) {
   };
 }
 
-export function StaffForm({ initial }: { initial?: StaffMember | StaffDto }) {
+export function StaffForm({ initial }: { initial?: StaffDto }) {
   const navigate = useNavigate();
   const createStaff = useCreateStaff();
   const updateStaff = useUpdateStaff(initial?.id ?? "");
@@ -115,7 +115,11 @@ export function StaffForm({ initial }: { initial?: StaffMember | StaffDto }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <FormField label="Typ pracownika" htmlFor="role">
-        <Select value={values.role} onValueChange={(value) => set("role", value)}>
+        <Select
+          value={values.role}
+          onValueChange={(value) => set("role", value)}
+          disabled={Boolean(initial)}
+        >
           <SelectTrigger className="w-full sm:w-72">
             <SelectValue />
           </SelectTrigger>
