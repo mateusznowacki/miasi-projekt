@@ -23,8 +23,8 @@ const schema = z.object({
 export function LoginPage() {
   const navigate = useNavigate();
   const login = useLogin();
-  const [email, setEmail] = useState("pacjent@medflow.pl");
-  const [password, setPassword] = useState("haslo123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   function handleSubmit(event: React.FormEvent) {
@@ -93,9 +93,6 @@ export function LoginPage() {
             </CardFooter>
           </form>
         </Card>
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          Konta demo: pacjent@ / lekarz@ / rejestracja@ / admin@medflow.pl · hasło: haslo123
-        </p>
       </div>
     </div>
   );
