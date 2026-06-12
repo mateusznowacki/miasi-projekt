@@ -83,6 +83,7 @@ public class PatientController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN_STAFF', 'ADMIN')")
     @GetMapping("/search")
     public ResponseEntity<java.util.List<pl.MiASI.patient.domain.model.Patient>> searchPatients(
             @RequestParam(required = false) String firstName,

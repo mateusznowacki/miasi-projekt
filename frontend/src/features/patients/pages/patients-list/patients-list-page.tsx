@@ -45,7 +45,10 @@ export function PatientsListPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {data.map((patient) => (
-            <PatientCard key={patient.id?.value ?? `${patient.firstName}-${patient.lastName}`} patient={patient} />
+            <PatientCard
+              key={patient.id?.value ?? `${patient.firstName}-${patient.lastName}`}
+              patient={patient}
+            />
           ))}
         </div>
       )}

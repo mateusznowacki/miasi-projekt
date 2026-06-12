@@ -3,6 +3,7 @@ package pl.MiASI.iam.adapter.out.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,7 +37,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/patients/register").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger
-                        .requestMatchers("/api/staff/**", "/api/doctors/**").hasAnyRole("ADMIN", "ADMIN_STAFF")
+                        .requestMatchers(HttpMethod.GET, "/api/doctors").hasAnyRole("PATIENT", "DOCTOR", "ADMIN_STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/schedules/available").hasAnyRole("PATIENT", "DOCTOR", "ADMIN_STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/staff/*").hasAnyRole("DOCTOR", "ADMIN_STAFF", "ADMIN")
+                        .requestMatchers("/api/staff/**").hasAnyRole("ADMIN", "ADMIN_STAFF")
                         .requestMatchers("/api/schedules/**").hasAnyRole("DOCTOR", "ADMIN_STAFF", "ADMIN")
                         .requestMatchers("/api/visits/**").hasAnyRole("PATIENT", "DOCTOR", "ADMIN_STAFF", "ADMIN")
                         .requestMatchers("/api/patients/**").hasAnyRole("PATIENT", "DOCTOR", "ADMIN_STAFF", "ADMIN")

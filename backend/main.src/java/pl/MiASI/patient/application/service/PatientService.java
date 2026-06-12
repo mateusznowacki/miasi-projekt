@@ -98,10 +98,34 @@ public class PatientService implements PatientUseCase {
     @Transactional(readOnly = true)
     public List<Patient> searchPatients(String firstName, String lastName, String pesel, String patientCardNumber) {
         return patientRepository.findAll().stream()
-                .filter(p -> (firstName == null || firstName.isBlank() || p.getFirstName().toLowerCase().contains(firstName.toLowerCase())))
-                .filter(p -> (lastName == null || lastName.isBlank() || p.getLastName().toLowerCase().contains(lastName.toLowerCase())))
-                .filter(p -> (pesel == null || pesel.isBlank() || p.getPesel().contains(pesel)))
-                .filter(p -> (patientCardNumber == null || patientCardNumber.isBlank() || p.getId().value().toString().equals(patientCardNumber)))
+                .filter(p -> matchesName(p, firstName, lastName))
+                .filter(p -> pesel == null || pesel.isBlank() || p.getPesel().contains(pesel))
+                .filter(p -> patientCardNumber == null || patientCardNumber.isBlank() || p.getId().value().toString().equals(patientCardNumber))
                 .toList();
+    }
+
+    private boolean matchesName(Patient patient, String firstName, String lastName) {
+        boolean hasFirst = firstName != null && !firstName.isBlank();
+        boolean hasLast = lastName != null && !lastName.isBlank();
+
+        if (!hasFirst && !hasLast) {
+            return true;
+        }
+
+        if (hasFirst && hasLast) {
+            return containsIgnoreCase(patient.getFirstName(), firstName)
+                    && containsIgnoreCase(patient.getLastName(), lastName);
+        }
+
+        String term = hasFirst ? firstName : lastName;
+        String fullName = patient.getFirstName() + " " + patient.getLastName();
+        return containsIgnoreCase(patient.getFirstName(), term)
+                || containsIgnoreCase(patient.getLastName(), term)
+                || containsIgnoreCase(fullName, term);
+    }
+
+    private boolean containsIgnoreCase(String haystack, String needle) {
+        return haystack != null && needle != null
+                && haystack.toLowerCase().contains(needle.toLowerCase());
     }
 }
