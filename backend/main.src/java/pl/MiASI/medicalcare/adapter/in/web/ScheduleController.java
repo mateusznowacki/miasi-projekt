@@ -51,14 +51,14 @@ public class ScheduleController {
                 .map(schedule -> {
                     List<pl.MiASI.medicalcare.domain.model.Slot> filteredSlots = schedule.slots();
                     if (date != null) {
-                        java.time.LocalDate targetDate = java.time.LocalDate.parse(date);
+                        java.time.LocalDate targetDate = parseDateParam(date);
                         filteredSlots = filteredSlots.stream()
                                 .filter(s -> s.getTimeRange().startTime().toLocalDate().equals(targetDate))
                                 .collect(Collectors.toList());
                     }
                     if (from != null && to != null) {
-                        java.time.LocalDate fromDate = java.time.LocalDate.parse(from);
-                        java.time.LocalDate toDate = java.time.LocalDate.parse(to);
+                        java.time.LocalDate fromDate = parseDateParam(from);
+                        java.time.LocalDate toDate = parseDateParam(to);
                         filteredSlots = filteredSlots.stream()
                                 .filter(s -> !s.getTimeRange().startTime().toLocalDate().isBefore(fromDate) &&
                                         !s.getTimeRange().startTime().toLocalDate().isAfter(toDate))
@@ -73,6 +73,11 @@ public class ScheduleController {
                 })
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    private static java.time.LocalDate parseDateParam(String value) {
+        String datePart = value.length() >= 10 ? value.substring(0, 10) : value;
+        return java.time.LocalDate.parse(datePart);
     }
 }
 
