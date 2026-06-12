@@ -11,14 +11,14 @@ import {
 import { PageHeader } from "@/shared/components/page-header";
 import { useAuth } from "@/shared/auth/use-auth";
 import { formatDate } from "@/shared/lib/format-date";
-import { useDoctors } from "@/features/appointments/api/use-doctors";
+import { useDoctors } from "@/shared/api/use-doctors";
 import { AddSlotDrawer } from "../components/add-slot-drawer";
 import { ScheduleDayView } from "../components/schedule-day-view";
 
 export function SchedulePage() {
   const auth = useAuth();
   const isStaff = auth?.role === "admin_staff";
-  const doctors = useDoctors(isStaff ? {} : { name: "__none__" });
+  const doctors = useDoctors({});
 
   const [selectedDoctorId, setSelectedDoctorId] = useState<string>(
     auth?.role === "doctor" ? auth.userId : "",
@@ -47,7 +47,7 @@ export function SchedulePage() {
             </SelectTrigger>
             <SelectContent>
               {(doctors.data ?? []).map((doctor) => (
-                <SelectItem key={doctor.id} value={doctor.id}>
+                <SelectItem key={doctor.id} value={doctor.id ?? ""}>
                   dr {doctor.firstName} {doctor.lastName} · {doctor.specialization}
                 </SelectItem>
               ))}

@@ -1,23 +1,23 @@
 import { cn } from "@/lib/utils";
+import type { AvailableSlotDto } from "@/client";
 import { formatTime } from "@/shared/lib/format-date";
-import type { Slot } from "@/shared/types/slot";
 
 export function SlotPicker({
   slots,
   selectedSlotId,
   onSelect,
 }: {
-  slots: Slot[];
+  slots: AvailableSlotDto[];
   selectedSlotId?: string | null;
-  onSelect?: (slot: Slot) => void;
+  onSelect?: (slot: AvailableSlotDto) => void;
 }) {
   return (
     <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
       {slots.map((slot) => {
-        const selected = slot.id === selectedSlotId;
+        const selected = slot.slotId === selectedSlotId;
         return (
           <button
-            key={slot.id}
+            key={slot.slotId}
             type="button"
             onClick={() => onSelect?.(slot)}
             className={cn(
@@ -26,7 +26,7 @@ export function SlotPicker({
               selected && "border-primary bg-primary text-primary-foreground hover:bg-primary",
             )}
           >
-            {formatTime(slot.startTime)}
+            {formatTime(slot.startTime ?? "")}
           </button>
         );
       })}

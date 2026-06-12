@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { Check, Search, Stethoscope } from "lucide-react";
+import type { StaffDto } from "@/client";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { EmptyState } from "@/shared/components/empty-state";
-import type { StaffMember } from "@/shared/types/staff-member";
-import { useDoctors } from "../api/use-doctors";
+import { useDoctors } from "@/shared/api/use-doctors";
 
 export function DoctorPicker({
   selectedDoctorId,
   onSelect,
 }: {
   selectedDoctorId?: string | null;
-  onSelect: (doctor: StaffMember) => void;
+  onSelect: (doctor: StaffDto) => void;
 }) {
   const [name, setName] = useState("");
   const [specialization, setSpecialization] = useState("");

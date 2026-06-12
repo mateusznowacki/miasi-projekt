@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { CalendarClock, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import type { AvailableSlotDto, ReserveVisitRequest, StaffDto } from "@/client";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -14,6 +15,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -26,16 +28,21 @@ import { PageHeader } from "@/shared/components/page-header";
 import { SlotPicker } from "@/shared/components/slot-picker";
 import { useAuth } from "@/shared/auth/use-auth";
 import { formatDate, formatTime } from "@/shared/lib/format-date";
-import type { Slot } from "@/shared/types/slot";
-import type { StaffMember } from "@/shared/types/staff-member";
-import { usePatientsList } from "@/features/patients/api/use-patients-list";
-import { useAvailableSlots } from "../api/use-available-slots";
-import { useCreateAppointment } from "../api/use-create-appointment";
-import { DoctorPicker } from "../components/doctor-picker";
-import { StepCard } from "../components/step-card";
-import { SummaryRow } from "../components/summary-row";
+import { getPatientId, useSearchPatients } from "@/features/patients/api/use-search-patients";
+import { useAvailableSlots } from "./api/use-available-slots";
+import { useCreateAppointment } from "./api/use-create-appointment";
+import { DoctorPicker } from "./components/doctor-picker";
+import { StepCard } from "./components/step-card";
+import { SummaryRow } from "./components/summary-row";
 
-const APPOINTMENT_TYPES = ["Konsultacja", "Kontrola", "Badanie"];
+const APPOINTMENT_TYPES: Array<{
+  label: string;
+  value: NonNullable<ReserveVisitRequest["type"]>;
+}> = [
+  { label: "Konsultacja", value: "GENERAL" },
+  { label: "Kontrola", value: "FOLLOW_UP" },
+  { label: "Badanie", value: "SPECIALIST" },
+];
 
 export function BookAppointmentPage() {
   const auth = useAuth();
@@ -43,24 +50,30 @@ export function BookAppointmentPage() {
   const create = useCreateAppointment();
   const isStaff = auth?.role === "admin_staff";
 
-  const [doctor, setDoctor] = useState<StaffMember | null>(null);
+  const [doctor, setDoctor] = useState<StaffDto | null>(null);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [slot, setSlot] = useState<Slot | null>(null);
-  const [type, setType] = useState(APPOINTMENT_TYPES[0]);
+  const [slot, setSlot] = useState<AvailableSlotDto | null>(null);
+  const [type, setType] = useState<NonNullable<ReserveVisitRequest["type"]>>("GENERAL");
   const [patientId, setPatientId] = useState(auth?.role === "patient" ? auth.userId : "");
+  const [patientQuery, setPatientQuery] = useState("");
 
-  const patients = usePatientsList(isStaff ? {} : { name: "__none__" });
-  const slots = useAvailableSlots(doctor?.id ?? null, date ? date.toISOString() : null);
+  const patients = useSearchPatients(patientQuery);
+  const slots = useAvailableSlots(doctor, date);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const canConfirm = Boolean(doctor && slot && patientId && type);
+  const canConfirm = Boolean(doctor?.id && slot?.slotId && patientId && type);
 
   function handleConfirm() {
-    if (!doctor || !slot) return;
+    if (!doctor?.id || !slot?.slotId) return;
     create.mutate(
-      { doctorId: doctor.id, slotIds: [slot.id], patientId, type },
+      {
+        doctorId: doctor.id,
+        slotIds: [slot.slotId],
+        patientId,
+        type,
+      },
       {
         onSuccess: (res) => {
           toast.success("Wizyta została zarezerwowana");
@@ -77,26 +90,37 @@ export function BookAppointmentPage() {
 
       {isStaff && (
         <StepCard step={0} title="Wybierz pacjenta">
-          <Select value={patientId} onValueChange={setPatientId}>
-            <SelectTrigger className="w-full sm:w-80">
-              <SelectValue placeholder="Wybierz pacjenta" />
-            </SelectTrigger>
-            <SelectContent>
-              {(patients.data ?? []).map((p) => (
-                <SelectItem key={p.id} value={p.id}>
-                  {p.personalData.firstName} {p.personalData.lastName} · {p.personalData.pesel}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-3">
+            <Input
+              placeholder="Szukaj pacjenta po imieniu lub nazwisku"
+              value={patientQuery}
+              onChange={(e) => setPatientQuery(e.target.value)}
+              className="w-full sm:w-80"
+            />
+            <Select value={patientId} onValueChange={setPatientId}>
+              <SelectTrigger className="w-full sm:w-80">
+                <SelectValue placeholder="Wybierz pacjenta z wyników wyszukiwania" />
+              </SelectTrigger>
+              <SelectContent>
+                {(patients.data ?? []).map((patient) => {
+                  const id = getPatientId(patient);
+                  return (
+                    <SelectItem key={id} value={id}>
+                      {patient.firstName} {patient.lastName} · {patient.pesel}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </div>
         </StepCard>
       )}
 
       <StepCard step={1} title="Wybierz lekarza">
         <DoctorPicker
           selectedDoctorId={doctor?.id}
-          onSelect={(d) => {
-            setDoctor(d);
+          onSelect={(selected) => {
+            setDoctor(selected);
             setDate(undefined);
             setSlot(null);
           }}
@@ -109,8 +133,8 @@ export function BookAppointmentPage() {
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(d) => {
-                setDate(d);
+              onSelect={(selectedDate) => {
+                setDate(selectedDate);
                 setSlot(null);
               }}
               disabled={{ before: today }}
@@ -127,8 +151,8 @@ export function BookAppointmentPage() {
           ) : slots.data && slots.data.length > 0 ? (
             <SlotPicker
               slots={slots.data}
-              selectedSlotId={slot?.id}
-              onSelect={(s) => setSlot(s)}
+              selectedSlotId={slot?.slotId}
+              onSelect={(selectedSlot) => setSlot(selectedSlot)}
             />
           ) : (
             <p className="text-sm text-muted-foreground">
@@ -143,14 +167,19 @@ export function BookAppointmentPage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
             <div className="space-y-1.5">
               <p className="text-sm font-medium">Typ wizyty</p>
-              <Select value={type} onValueChange={setType}>
+              <Select
+                value={type}
+                onValueChange={(value) =>
+                  setType(value as NonNullable<ReserveVisitRequest["type"]>)
+                }
+              >
                 <SelectTrigger className="w-full sm:w-56">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {APPOINTMENT_TYPES.map((t) => (
-                    <SelectItem key={t} value={t}>
-                      {t}
+                  {APPOINTMENT_TYPES.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -171,11 +200,20 @@ export function BookAppointmentPage() {
                     <DrawerDescription>Sprawdź szczegóły przed potwierdzeniem.</DrawerDescription>
                   </DrawerHeader>
                   <div className="space-y-2 px-4 text-sm">
-                    <SummaryRow label="Lekarz" value={`dr ${doctor?.firstName} ${doctor?.lastName}`} />
+                    <SummaryRow
+                      label="Lekarz"
+                      value={`dr ${doctor?.firstName} ${doctor?.lastName}`}
+                    />
                     <SummaryRow label="Specjalizacja" value={doctor?.specialization ?? "—"} />
-                    <SummaryRow label="Termin" value={`${formatDate(slot.startTime)}, ${formatTime(slot.startTime)}`} />
-                    <SummaryRow label="Gabinet" value={slot.room} />
-                    <SummaryRow label="Typ" value={type} />
+                    <SummaryRow
+                      label="Termin"
+                      value={`${formatDate(slot.startTime ?? "")}, ${formatTime(slot.startTime ?? "")}`}
+                    />
+                    <SummaryRow label="Gabinet" value={slot.office ?? "—"} />
+                    <SummaryRow
+                      label="Typ"
+                      value={APPOINTMENT_TYPES.find((option) => option.value === type)?.label ?? type}
+                    />
                   </div>
                   <DrawerFooter>
                     <Button onClick={handleConfirm} disabled={create.isPending}>

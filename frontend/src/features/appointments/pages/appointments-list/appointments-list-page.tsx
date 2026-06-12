@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/shared/components/page-header";
 import { useAuth } from "@/shared/auth/use-auth";
-import { AppointmentsTab } from "../components/appointments-tab";
+import { AppointmentsTab } from "./appointments-tab";
 
 export function AppointmentsListPage() {
   const auth = useAuth();

@@ -8,11 +8,11 @@ import { PageHeader } from "@/shared/components/page-header";
 import { AppointmentStatusBadge } from "@/shared/components/status-badge";
 import { useAuth } from "@/shared/auth/use-auth";
 import { formatDate, formatTime } from "@/shared/lib/format-date";
-import { useAppointment } from "../api/use-appointment";
-import { CancelAppointmentDrawer } from "../components/cancel-appointment-drawer";
-import { ConductVisitDrawer } from "../components/conduct-visit-drawer";
-import { DetailRow } from "../components/detail-row";
-import { MedicalRecordView } from "../components/medical-record-view";
+import { useAppointment } from "./api/use-appointment";
+import { CancelAppointmentDrawer } from "./components/cancel-appointment-drawer";
+import { ConductVisitDrawer } from "./components/conduct-visit-drawer";
+import { DetailRow } from "./components/detail-row";
+import { MedicalRecordView } from "./components/medical-record-view";
 
 const route = getRouteApi("/_app/appointments/$id");
 

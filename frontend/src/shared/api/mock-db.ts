@@ -284,18 +284,6 @@ function makeToken(userId: string): string {
   return `mock-token-${userId}-${Date.now()}`;
 }
 
-function doctorDisplayName(doctorId: string): string {
-  const doctor = staff.find((s) => s.id === doctorId);
-  return doctor ? `dr ${doctor.firstName} ${doctor.lastName}` : "Nieznany lekarz";
-}
-
-function patientDisplayName(patientId: string): string {
-  const patient = patients.find((p) => p.id === patientId);
-  return patient
-    ? `${patient.personalData.firstName} ${patient.personalData.lastName}`
-    : "Nieznany pacjent";
-}
-
 // ---- Auth ------------------------------------------------------------------
 
 export const DEMO_ACCOUNTS = credentials.map((c) => ({
@@ -399,24 +387,6 @@ export async function dbUpdatePatientMedical(
   return delay(patient);
 }
 
-// ---- Doctors ---------------------------------------------------------------
-
-export async function dbListDoctors(filters: { specialization?: string; name?: string }): Promise<
-  StaffMember[]
-> {
-  const name = filters.name?.trim().toLowerCase() ?? "";
-  const specialization = filters.specialization?.trim().toLowerCase() ?? "";
-  const result = staff.filter((s) => {
-    if (s.role !== "doctor" || !s.active) return false;
-    const fullName = `${s.firstName} ${s.lastName}`.toLowerCase();
-    const matchesName = name === "" || fullName.includes(name);
-    const matchesSpec =
-      specialization === "" || (s.specialization ?? "").toLowerCase().includes(specialization);
-    return matchesName && matchesSpec;
-  });
-  return delay(result);
-}
-
 // ---- Schedule / Slots ------------------------------------------------------
 
 export async function dbGetSchedule(doctorId: string, from?: string, to?: string): Promise<Slot[]> {
@@ -427,22 +397,6 @@ export async function dbGetSchedule(doctorId: string, from?: string, to?: string
     .filter((s) => {
       const t = new Date(s.startTime).getTime();
       return t >= fromTime && t <= toTime;
-    })
-    .sort((a, b) => a.startTime.localeCompare(b.startTime));
-  return delay(result);
-}
-
-export async function dbGetAvailableSlots(doctorId: string, date: string): Promise<Slot[]> {
-  const day = new Date(date);
-  const result = slots
-    .filter((s) => s.doctorId === doctorId && s.status === "Wolny")
-    .filter((s) => {
-      const t = new Date(s.startTime);
-      return (
-        t.getFullYear() === day.getFullYear() &&
-        t.getMonth() === day.getMonth() &&
-        t.getDate() === day.getDate()
-      );
     })
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
   return delay(result);
@@ -498,40 +452,6 @@ export async function dbListAppointmentsByPatient(patientId: string): Promise<Ap
     .filter((a) => a.patientId === patientId)
     .sort((a, b) => b.date.localeCompare(a.date));
   return delay(result);
-}
-
-export interface CreateAppointmentInput {
-  doctorId: string;
-  slotIds: string[];
-  patientId: string;
-  type: string;
-}
-
-export async function dbCreateAppointment(
-  input: CreateAppointmentInput,
-): Promise<{ appointmentId: string }> {
-  const slot = slots.find((s) => s.id === input.slotIds[0]);
-  if (!slot) throw new Error("Wybrany termin nie istnieje");
-  if (slot.status === "Zajęty") throw new Error("Wybrany termin jest już zajęty");
-
-  for (const slotId of input.slotIds) {
-    const s = slots.find((x) => x.id === slotId);
-    if (s) s.status = "Zajęty";
-  }
-
-  const id = nextId("a");
-  appointments.push({
-    id,
-    date: slot.startTime,
-    doctorId: input.doctorId,
-    doctorName: doctorDisplayName(input.doctorId),
-    patientId: input.patientId,
-    patientName: patientDisplayName(input.patientId),
-    status: "Zarezerwowana",
-    type: input.type,
-    room: slot.room,
-  });
-  return delay({ appointmentId: id });
 }
 
 export async function dbCancelAppointment(id: string): Promise<Appointment> {

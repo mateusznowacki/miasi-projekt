@@ -4,7 +4,7 @@ import { ListSkeleton } from "@/shared/components/list-skeleton";
 import type { AuthUser } from "@/shared/types/auth-user";
 import type { VisitFilter } from "@/shared/api/fetch-visits";
 import { useVisitsList } from "@/shared/api/use-visits-list";
-import { AppointmentCard } from "./appointment-card";
+import { AppointmentCard } from "../../components/appointment-card";
 
 export function AppointmentsTab({
   user,
