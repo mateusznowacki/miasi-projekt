@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Loader2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import type { SlotDto } from "@/client";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -20,19 +21,21 @@ import {
   formatTime,
   toTimeInputValue,
 } from "@/shared/lib/format-date";
-import type { Slot } from "@/shared/types/slot";
 import { useDeleteSlot } from "../api/use-delete-slot";
 import { useUpdateSlot } from "../api/use-update-slot";
+import { getSlotEndTime, getSlotStartTime, normalizeSlotStatus } from "../lib/slot-helpers";
 
-export function SlotManageDrawer({ slot }: { slot: Slot }) {
+export function SlotManageDrawer({ doctorId, slot }: { doctorId: string; slot: SlotDto }) {
+  const startTime = getSlotStartTime(slot);
+  const endTime = getSlotEndTime(slot);
   const [open, setOpen] = useState(false);
-  const [start, setStart] = useState(toTimeInputValue(slot.startTime));
-  const [end, setEnd] = useState(toTimeInputValue(slot.endTime));
-  const [room, setRoom] = useState(slot.room);
+  const [start, setStart] = useState(toTimeInputValue(startTime));
+  const [end, setEnd] = useState(toTimeInputValue(endTime));
+  const [room, setRoom] = useState(slot.office ?? "");
   const [error, setError] = useState("");
   const updateSlot = useUpdateSlot();
   const deleteSlot = useDeleteSlot();
-  const baseDate = new Date(slot.startTime);
+  const baseDate = new Date(startTime);
 
   function handleSave(event: React.FormEvent) {
     event.preventDefault();
@@ -43,7 +46,8 @@ export function SlotManageDrawer({ slot }: { slot: Slot }) {
     setError("");
     updateSlot.mutate(
       {
-        slotId: slot.id,
+        doctorId,
+        slotId: slot.slotId ?? "",
         data: {
           startTime: combineDateAndTime(baseDate, start),
           endTime: combineDateAndTime(baseDate, end),
@@ -61,13 +65,16 @@ export function SlotManageDrawer({ slot }: { slot: Slot }) {
   }
 
   function handleDelete() {
-    deleteSlot.mutate(slot.id, {
-      onSuccess: () => {
-        toast.success("Termin usunięty");
-        setOpen(false);
+    deleteSlot.mutate(
+      { doctorId, slotId: slot.slotId ?? "" },
+      {
+        onSuccess: () => {
+          toast.success("Termin usunięty");
+          setOpen(false);
+        },
+        onError: (err) => toast.error(err.message),
       },
-      onError: (err) => toast.error(err.message),
-    });
+    );
   }
 
   return (
@@ -79,12 +86,12 @@ export function SlotManageDrawer({ slot }: { slot: Slot }) {
         >
           <div>
             <p className="font-medium">
-              {formatTime(slot.startTime)} – {formatTime(slot.endTime)}
+              {formatTime(startTime)} – {formatTime(endTime)}
             </p>
-            <p className="text-sm text-muted-foreground">{slot.room}</p>
+            <p className="text-sm text-muted-foreground">{slot.office ?? "—"}</p>
           </div>
           <div className="flex items-center gap-2">
-            <SlotStatusBadge status={slot.status} />
+            <SlotStatusBadge status={normalizeSlotStatus(slot.status)} />
             <Pencil className="size-4 text-muted-foreground" />
           </div>
         </button>

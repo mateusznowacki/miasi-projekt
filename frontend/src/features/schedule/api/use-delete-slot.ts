@@ -1,10 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { dbDeleteSlot } from "@/shared/api/mock-db";
+import { removeSlot } from "@/client";
 
 export function useDeleteSlot() {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (slotId: string) => dbDeleteSlot(slotId),
+    mutationFn: async ({ doctorId, slotId }: { doctorId: string; slotId: string }) => {
+      await removeSlot({
+        path: { doctorId, slotId },
+        throwOnError: true,
+      });
+    },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["schedule"] }),
   });
 }

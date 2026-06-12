@@ -35,7 +35,7 @@ export async function apiClient(endpoint: string, options: RequestInit = {}) {
   
   try {
     return JSON.parse(text);
-  } catch (e) {
+  } catch {
     return text;
   }
 }
