@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/shared/components/page-header";
-import { usePatient } from "../api/use-patient";
-import { PatientMedicalForm } from "../components/patient-medical-form";
+import { usePatient } from "@/shared/api/use-patient";
+import { PatientPersonalForm } from "./components/patient-personal-form";
 
-const route = getRouteApi("/_app/patients/$id/medical");
+const route = getRouteApi("/_app/patients/$id/edit");
 
-export function PatientMedicalEditPage() {
+export function PatientEditPage() {
   const { id } = route.useParams();
   const { data, isPending, isError, error } = usePatient(id);
 
@@ -21,16 +21,16 @@ export function PatientMedicalEditPage() {
           Wróć do profilu
         </Link>
       </Button>
-      <PageHeader title="Edycja danych medycznych" />
+      <PageHeader title="Edycja danych osobowych" />
 
       {isPending ? (
         <Skeleton className="h-72 w-full" />
-      ) : isError ? (
-        <p className="text-sm text-destructive">{error.message}</p>
+      ) : isError || !data ? (
+        <p className="text-sm text-destructive">{error?.message ?? "Nie znaleziono pacjenta"}</p>
       ) : (
         <Card>
           <CardContent className="pt-6">
-            <PatientMedicalForm patient={data} />
+            <PatientPersonalForm patient={data} patientId={id} />
           </CardContent>
         </Card>
       )}

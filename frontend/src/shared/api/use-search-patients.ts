@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { searchPatients } from "@/client";
+import { searchPatients, type Patient } from "@/client";
 
 function toSearchQuery(query: string) {
   const parts = query.trim().split(/\s+/);
@@ -25,6 +25,6 @@ export function useSearchPatients(query: string) {
   });
 }
 
-export function getPatientId(patient: { id?: { value?: string } }): string {
+export function getPatientId(patient: Patient | { id?: { value?: string } }): string {
   return patient.id?.value ?? "";
 }

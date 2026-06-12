@@ -2,21 +2,27 @@ import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import type { Patient } from "@/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/shared/components/form-field";
-import type { Patient } from "@/shared/types/patient";
 import { useUpdatePatientPersonal } from "../api/use-update-patient-personal";
 
-export function PatientPersonalForm({ patient }: { patient: Patient }) {
+export function PatientPersonalForm({
+  patient,
+  patientId,
+}: {
+  patient: Patient;
+  patientId: string;
+}) {
   const navigate = useNavigate();
-  const update = useUpdatePatientPersonal(patient.id);
+  const update = useUpdatePatientPersonal(patientId);
   const [values, setValues] = useState({
-    firstName: patient.personalData.firstName,
-    lastName: patient.personalData.lastName,
-    email: patient.personalData.email,
-    phone: patient.personalData.phone,
-    address: patient.personalData.address,
+    firstName: patient.firstName ?? "",
+    lastName: patient.lastName ?? "",
+    email: patient.email ?? "",
+    phone: patient.phone ?? "",
+    address: patient.address ?? "",
   });
 
   function set(field: keyof typeof values, value: string) {
@@ -28,9 +34,9 @@ export function PatientPersonalForm({ patient }: { patient: Patient }) {
     update.mutate(values, {
       onSuccess: () => {
         toast.success("Dane osobowe zaktualizowane");
-        navigate({ to: "/patients/$id", params: { id: patient.id } });
+        navigate({ to: "/patients/$id", params: { id: patientId } });
       },
-      onError: (error) => toast.error(error.message),
+      onError: (err) => toast.error(err.message),
     });
   }
 
@@ -68,7 +74,7 @@ export function PatientPersonalForm({ patient }: { patient: Patient }) {
       </FormField>
       <div className="flex justify-end gap-2">
         <Button asChild type="button" variant="outline">
-          <Link to="/patients/$id" params={{ id: patient.id }}>
+          <Link to="/patients/$id" params={{ id: patientId }}>
             Anuluj
           </Link>
         </Button>

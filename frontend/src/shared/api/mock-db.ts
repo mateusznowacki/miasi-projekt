@@ -1,6 +1,5 @@
 import type { AuthUser } from "../types/auth-user";
 import type { Role } from "../types/role";
-import type { Appointment } from "../types/appointment";
 import type { Patient } from "../types/patient";
 import type { Slot } from "../types/slot";
 import type { StaffMember } from "../types/staff-member";
@@ -166,53 +165,6 @@ function seedSlots() {
 }
 seedSlots();
 
-const appointments: Appointment[] = [
-  {
-    id: "a1",
-    date: isoAt(3, 10, 30),
-    doctorId: "d1",
-    doctorName: "dr Anna Kowalska",
-    patientId: "p1",
-    patientName: "Jan Kowalski",
-    status: "Zarezerwowana",
-    type: "Konsultacja",
-    room: "Gabinet 12",
-  },
-  {
-    id: "a2",
-    date: isoAt(7, 14, 0),
-    doctorId: "d2",
-    doctorName: "dr Piotr Nowak",
-    patientId: "p1",
-    patientName: "Jan Kowalski",
-    status: "Zarezerwowana",
-    type: "Kontrola",
-    room: "Gabinet 4",
-  },
-  {
-    id: "a3",
-    date: isoAt(-14, 9, 0),
-    doctorId: "d1",
-    doctorName: "dr Anna Kowalska",
-    patientId: "p1",
-    patientName: "Jan Kowalski",
-    status: "Zakończona",
-    type: "Konsultacja",
-    room: "Gabinet 12",
-  },
-  {
-    id: "a4",
-    date: isoAt(-30, 11, 0),
-    doctorId: "d3",
-    doctorName: "dr Ewa Lewandowska",
-    patientId: "p2",
-    patientName: "Maria Nowak",
-    status: "Zakończona",
-    type: "Badanie",
-    room: "Gabinet 7",
-  },
-];
-
 const credentials: Credential[] = [
   {
     email: "pacjent@medflow.pl",
@@ -333,46 +285,6 @@ export function getDemoUserForRole(role: Role): AuthUser {
   return { ...cred.user, accessToken: makeToken(cred.user.userId) };
 }
 
-// ---- Patients --------------------------------------------------------------
-
-export async function dbListPatients(filters: { name?: string; pesel?: string }): Promise<Patient[]> {
-  const name = filters.name?.trim().toLowerCase() ?? "";
-  const pesel = filters.pesel?.trim() ?? "";
-  const result = patients.filter((p) => {
-    const fullName = `${p.personalData.firstName} ${p.personalData.lastName}`.toLowerCase();
-    const matchesName = name === "" || fullName.includes(name);
-    const matchesPesel = pesel === "" || p.personalData.pesel.includes(pesel);
-    return matchesName && matchesPesel;
-  });
-  return delay(result);
-}
-
-export async function dbGetPatient(id: string): Promise<Patient> {
-  const patient = patients.find((p) => p.id === id);
-  if (!patient) throw new Error("Nie znaleziono pacjenta");
-  return delay(patient);
-}
-
-export async function dbUpdatePatientPersonal(
-  id: string,
-  data: Partial<Patient["personalData"]>,
-): Promise<Patient> {
-  const patient = patients.find((p) => p.id === id);
-  if (!patient) throw new Error("Nie znaleziono pacjenta");
-  patient.personalData = { ...patient.personalData, ...data };
-  return delay(patient);
-}
-
-export async function dbUpdatePatientMedical(
-  id: string,
-  data: Partial<Patient["medicalData"]>,
-): Promise<Patient> {
-  const patient = patients.find((p) => p.id === id);
-  if (!patient) throw new Error("Nie znaleziono pacjenta");
-  patient.medicalData = { ...patient.medicalData, ...data };
-  return delay(patient);
-}
-
 // ---- Schedule / Slots ------------------------------------------------------
 
 export async function dbGetSchedule(doctorId: string, from?: string, to?: string): Promise<Slot[]> {
@@ -426,13 +338,6 @@ export async function dbDeleteSlot(slotId: string): Promise<{ id: string }> {
 }
 
 // ---- Appointments ----------------------------------------------------------
-
-export async function dbListAppointmentsByPatient(patientId: string): Promise<Appointment[]> {
-  const result = appointments
-    .filter((a) => a.patientId === patientId)
-    .sort((a, b) => b.date.localeCompare(a.date));
-  return delay(result);
-}
 
 // ---- Staff -----------------------------------------------------------------
 

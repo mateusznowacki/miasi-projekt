@@ -1,5 +1,5 @@
 import { Link, getRouteApi } from "@tanstack/react-router";
-import { CalendarX2, HeartPulse, Pencil, UserPen } from "lucide-react";
+import { CalendarX2, FileText, UserPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,8 +9,9 @@ import { InfoRow } from "@/shared/components/info-row";
 import { ListSkeleton } from "@/shared/components/list-skeleton";
 import { PageHeader } from "@/shared/components/page-header";
 import { useAuth } from "@/shared/auth/use-auth";
-import { usePatient } from "../api/use-patient";
-import { usePatientAppointments } from "../api/use-patient-appointments";
+import { usePatient } from "@/shared/api/use-patient";
+import { formatDate } from "@/shared/lib/format-date";
+import { usePatientVisits } from "./api/use-patient-visits";
 
 const route = getRouteApi("/_app/patients/$id/");
 
@@ -18,7 +19,7 @@ export function PatientProfilePage() {
   const auth = useAuth();
   const { id } = route.useParams();
   const { data, isPending, isError, error } = usePatient(id);
-  const appointments = usePatientAppointments(id);
+  const visits = usePatientVisits(id);
 
   if (isPending) {
     return (
@@ -29,15 +30,19 @@ export function PatientProfilePage() {
     );
   }
 
-  if (isError) return <p className="text-sm text-destructive">{error.message}</p>;
+  if (isError || !data) {
+    return <p className="text-sm text-destructive">{error?.message ?? "Nie znaleziono pacjenta"}</p>;
+  }
 
-  const { personalData: pd, medicalData: md } = data;
   const canEditPersonal = auth?.role === "admin_staff" || auth?.role === "patient";
-  const canEditMedical = auth?.role === "doctor" || auth?.role === "admin_staff";
+  const medicalRecords = data.medicalRecords ?? [];
 
   return (
     <div className="space-y-6">
-      <PageHeader title={`${pd.firstName} ${pd.lastName}`} description="Profil pacjenta" />
+      <PageHeader
+        title={`${data.firstName ?? ""} ${data.lastName ?? ""}`}
+        description="Profil pacjenta"
+      />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
@@ -53,48 +58,50 @@ export function PatientProfilePage() {
             )}
           </CardHeader>
           <CardContent>
-            <InfoRow label="Imię i nazwisko" value={`${pd.firstName} ${pd.lastName}`} />
-            <InfoRow label="Email" value={pd.email} />
-            <InfoRow label="Telefon" value={pd.phone} />
-            <InfoRow label="PESEL" value={pd.pesel} />
-            <InfoRow label="Adres" value={pd.address} />
+            <InfoRow label="Imię i nazwisko" value={`${data.firstName ?? ""} ${data.lastName ?? ""}`} />
+            <InfoRow label="Email" value={data.email ?? "—"} />
+            <InfoRow label="Telefon" value={data.phone ?? "—"} />
+            <InfoRow label="PESEL" value={data.pesel ?? "—"} />
+            <InfoRow label="Adres" value={data.address ?? "—"} />
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex-row items-center justify-between">
+          <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <HeartPulse className="size-4 text-primary" />
-              Dane medyczne
+              <FileText className="size-4 text-primary" />
+              Historia medyczna
             </CardTitle>
-            {canEditMedical && (
-              <Button asChild variant="outline" size="sm">
-                <Link to="/patients/$id/medical" params={{ id }}>
-                  <Pencil className="size-4" />
-                  Edytuj
-                </Link>
-              </Button>
-            )}
           </CardHeader>
-          <CardContent>
-            <InfoRow label="Grupa krwi" value={md.bloodType} />
-            <InfoRow label="Alergie" value={md.allergies} />
-            <InfoRow label="Choroby przewlekłe" value={md.chronicDiseases} />
-            <InfoRow label="Leki" value={md.medications} />
+          <CardContent className="space-y-4">
+            {medicalRecords.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Brak wpisów w historii medycznej.</p>
+            ) : (
+              medicalRecords.map((record) => (
+                <div key={record.recordId} className="rounded-lg border p-3">
+                  <p className="font-medium">{record.diagnoses ?? "—"}</p>
+                  {record.createdAt && (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {formatDate(record.createdAt)}
+                    </p>
+                  )}
+                </div>
+              ))
+            )}
           </CardContent>
         </Card>
       </div>
 
       <section>
         <h2 className="mb-3 text-lg font-semibold">Historia wizyt</h2>
-        {appointments.isPending ? (
+        {visits.isPending ? (
           <ListSkeleton count={2} />
-        ) : appointments.data && appointments.data.length > 0 ? (
+        ) : visits.data && visits.data.length > 0 ? (
           <div className="flex flex-col gap-3">
-            {appointments.data.map((appointment) => (
+            {visits.data.map((visit) => (
               <AppointmentCard
-                key={appointment.id}
-                appointment={appointment}
+                key={visit.id}
+                appointment={visit}
                 viewerRole={auth?.role ?? "admin_staff"}
               />
             ))}

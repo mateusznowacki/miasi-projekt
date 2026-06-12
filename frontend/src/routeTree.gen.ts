@@ -26,7 +26,6 @@ import { Route as AppAppointmentsIdRouteImport } from './routes/_app/appointment
 import { Route as AppStaffIdIndexRouteImport } from './routes/_app/staff/$id/index'
 import { Route as AppPatientsIdIndexRouteImport } from './routes/_app/patients/$id/index'
 import { Route as AppStaffIdEditRouteImport } from './routes/_app/staff/$id/edit'
-import { Route as AppPatientsIdMedicalRouteImport } from './routes/_app/patients/$id/medical'
 import { Route as AppPatientsIdEditRouteImport } from './routes/_app/patients/$id/edit'
 
 const RegisterRoute = RegisterRouteImport.update({
@@ -113,11 +112,6 @@ const AppStaffIdEditRoute = AppStaffIdEditRouteImport.update({
   path: '/staff/$id/edit',
   getParentRoute: () => AppRoute,
 } as any)
-const AppPatientsIdMedicalRoute = AppPatientsIdMedicalRouteImport.update({
-  id: '/patients/$id/medical',
-  path: '/patients/$id/medical',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppPatientsIdEditRoute = AppPatientsIdEditRouteImport.update({
   id: '/patients/$id/edit',
   path: '/patients/$id/edit',
@@ -139,7 +133,6 @@ export interface FileRoutesByFullPath {
   '/schedule/': typeof AppScheduleIndexRoute
   '/staff/': typeof AppStaffIndexRoute
   '/patients/$id/edit': typeof AppPatientsIdEditRoute
-  '/patients/$id/medical': typeof AppPatientsIdMedicalRoute
   '/staff/$id/edit': typeof AppStaffIdEditRoute
   '/patients/$id/': typeof AppPatientsIdIndexRoute
   '/staff/$id/': typeof AppStaffIdIndexRoute
@@ -159,7 +152,6 @@ export interface FileRoutesByTo {
   '/schedule': typeof AppScheduleIndexRoute
   '/staff': typeof AppStaffIndexRoute
   '/patients/$id/edit': typeof AppPatientsIdEditRoute
-  '/patients/$id/medical': typeof AppPatientsIdMedicalRoute
   '/staff/$id/edit': typeof AppStaffIdEditRoute
   '/patients/$id': typeof AppPatientsIdIndexRoute
   '/staff/$id': typeof AppStaffIdIndexRoute
@@ -181,7 +173,6 @@ export interface FileRoutesById {
   '/_app/schedule/': typeof AppScheduleIndexRoute
   '/_app/staff/': typeof AppStaffIndexRoute
   '/_app/patients/$id/edit': typeof AppPatientsIdEditRoute
-  '/_app/patients/$id/medical': typeof AppPatientsIdMedicalRoute
   '/_app/staff/$id/edit': typeof AppStaffIdEditRoute
   '/_app/patients/$id/': typeof AppPatientsIdIndexRoute
   '/_app/staff/$id/': typeof AppStaffIdIndexRoute
@@ -203,7 +194,6 @@ export interface FileRouteTypes {
     | '/schedule/'
     | '/staff/'
     | '/patients/$id/edit'
-    | '/patients/$id/medical'
     | '/staff/$id/edit'
     | '/patients/$id/'
     | '/staff/$id/'
@@ -223,7 +213,6 @@ export interface FileRouteTypes {
     | '/schedule'
     | '/staff'
     | '/patients/$id/edit'
-    | '/patients/$id/medical'
     | '/staff/$id/edit'
     | '/patients/$id'
     | '/staff/$id'
@@ -244,7 +233,6 @@ export interface FileRouteTypes {
     | '/_app/schedule/'
     | '/_app/staff/'
     | '/_app/patients/$id/edit'
-    | '/_app/patients/$id/medical'
     | '/_app/staff/$id/edit'
     | '/_app/patients/$id/'
     | '/_app/staff/$id/'
@@ -377,13 +365,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppStaffIdEditRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/patients/$id/medical': {
-      id: '/_app/patients/$id/medical'
-      path: '/patients/$id/medical'
-      fullPath: '/patients/$id/medical'
-      preLoaderRoute: typeof AppPatientsIdMedicalRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/patients/$id/edit': {
       id: '/_app/patients/$id/edit'
       path: '/patients/$id/edit'
@@ -407,7 +388,6 @@ interface AppRouteChildren {
   AppScheduleIndexRoute: typeof AppScheduleIndexRoute
   AppStaffIndexRoute: typeof AppStaffIndexRoute
   AppPatientsIdEditRoute: typeof AppPatientsIdEditRoute
-  AppPatientsIdMedicalRoute: typeof AppPatientsIdMedicalRoute
   AppStaffIdEditRoute: typeof AppStaffIdEditRoute
   AppPatientsIdIndexRoute: typeof AppPatientsIdIndexRoute
   AppStaffIdIndexRoute: typeof AppStaffIdIndexRoute
@@ -426,7 +406,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppScheduleIndexRoute: AppScheduleIndexRoute,
   AppStaffIndexRoute: AppStaffIndexRoute,
   AppPatientsIdEditRoute: AppPatientsIdEditRoute,
-  AppPatientsIdMedicalRoute: AppPatientsIdMedicalRoute,
   AppStaffIdEditRoute: AppStaffIdEditRoute,
   AppPatientsIdIndexRoute: AppPatientsIdIndexRoute,
   AppStaffIdIndexRoute: AppStaffIdIndexRoute,

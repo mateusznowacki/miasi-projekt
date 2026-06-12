@@ -1,16 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, IdCard, Phone } from "lucide-react";
+import type { Patient } from "@/client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import type { Patient } from "@/shared/types/patient";
+import { getPatientId } from "@/shared/api/use-search-patients";
 
 export function PatientCard({ patient }: { patient: Patient }) {
-  const { firstName, lastName, pesel, phone } = patient.personalData;
+  const id = getPatientId(patient);
+  const firstName = patient.firstName ?? "";
+  const lastName = patient.lastName ?? "";
   const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 
   return (
     <Link
       to="/patients/$id"
-      params={{ id: patient.id }}
+      params={{ id }}
       className="group flex items-center gap-4 rounded-xl border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-accent/40"
     >
       <Avatar className="size-11">
@@ -25,11 +28,11 @@ export function PatientCard({ patient }: { patient: Patient }) {
         <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
           <span className="inline-flex items-center gap-1">
             <IdCard className="size-3.5" />
-            {pesel}
+            {patient.pesel ?? "—"}
           </span>
           <span className="inline-flex items-center gap-1">
             <Phone className="size-3.5" />
-            {phone}
+            {patient.phone ?? "—"}
           </span>
         </div>
       </div>

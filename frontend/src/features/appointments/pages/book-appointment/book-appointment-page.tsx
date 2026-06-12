@@ -28,7 +28,7 @@ import { PageHeader } from "@/shared/components/page-header";
 import { SlotPicker } from "@/shared/components/slot-picker";
 import { useAuth } from "@/shared/auth/use-auth";
 import { formatDate, formatTime } from "@/shared/lib/format-date";
-import { getPatientId, useSearchPatients } from "@/features/patients/api/use-search-patients";
+import { getPatientId, useSearchPatients } from "@/shared/api/use-search-patients";
 import { useAvailableSlots } from "./api/use-available-slots";
 import { useCreateAppointment } from "./api/use-create-appointment";
 import { DoctorPicker } from "./components/doctor-picker";
