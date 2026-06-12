@@ -487,30 +487,6 @@ export async function dbDeleteSlot(slotId: string): Promise<{ id: string }> {
 
 // ---- Appointments ----------------------------------------------------------
 
-export async function dbListAppointments(params: {
-  userId: string;
-  role: Role;
-  filter: "upcoming" | "past";
-}): Promise<Appointment[]> {
-  const now = Date.now();
-  const result = appointments
-    .filter((a) => {
-      if (params.role === "patient") return a.patientId === params.userId;
-      if (params.role === "doctor") return a.doctorId === params.userId;
-      return true;
-    })
-    .filter((a) => {
-      const isPast = new Date(a.date).getTime() < now || a.status !== "Zarezerwowana";
-      return params.filter === "past" ? isPast : !isPast;
-    })
-    .sort((a, b) =>
-      params.filter === "past"
-        ? b.date.localeCompare(a.date)
-        : a.date.localeCompare(b.date),
-    );
-  return delay(result);
-}
-
 export async function dbGetAppointment(id: string): Promise<Appointment> {
   const appointment = appointments.find((a) => a.id === id);
   if (!appointment) throw new Error("Nie znaleziono wizyty");

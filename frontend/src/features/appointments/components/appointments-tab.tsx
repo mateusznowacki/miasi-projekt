@@ -2,7 +2,8 @@ import { CalendarX2 } from "lucide-react";
 import { EmptyState } from "@/shared/components/empty-state";
 import { ListSkeleton } from "@/shared/components/list-skeleton";
 import type { AuthUser } from "@/shared/types/auth-user";
-import { useAppointmentsList, type AppointmentFilter } from "../api/use-appointments-list";
+import type { VisitFilter } from "@/shared/api/fetch-visits";
+import { useVisitsList } from "@/shared/api/use-visits-list";
 import { AppointmentCard } from "./appointment-card";
 
 export function AppointmentsTab({
@@ -10,9 +11,9 @@ export function AppointmentsTab({
   filter,
 }: {
   user: AuthUser;
-  filter: AppointmentFilter;
+  filter: VisitFilter;
 }) {
-  const { data, isPending, isError, error } = useAppointmentsList({
+  const { data, isPending, isError, error } = useVisitsList({
     userId: user.userId,
     role: user.role,
     filter,
@@ -21,7 +22,7 @@ export function AppointmentsTab({
   if (isPending) return <ListSkeleton count={3} />;
   if (isError) return <p className="text-sm text-destructive">{error.message}</p>;
 
-  if (data.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <EmptyState
         icon={CalendarX2}
