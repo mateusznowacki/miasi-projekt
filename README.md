@@ -21,3 +21,24 @@ Na systemie Windows:
 ```cmd
 mvnw.cmd spring-boot:run
 ```
+
+### Dane testowe (profil `dev`)
+
+Uruchom backend z profilem `dev`, aby automatycznie zasilić bazę danymi demo (tylko przy pierwszym starcie, gdy baza jest pusta):
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+Wymaga działającej bazy PostgreSQL (`docker compose up -d`).
+
+| Rola | Email | Hasło |
+|------|-------|-------|
+| Administrator | `admin@medflow.pl` | `haslo123` |
+| Recepcja | `rejestracja@medflow.pl` | `password` |
+| Lekarz (kardiologia) | `lekarz@medflow.pl` | `password` |
+| Lekarz (interna) | `maria.nowak@medflow.pl` | `password` |
+| Pacjent | `pacjent@medflow.pl` | `haslo123` |
+| Pacjent | `anna.wisniewska@medflow.pl` | `haslo123` |
+
+Seeder tworzy też terminy w harmonogramach lekarzy oraz wizyty (nadchodzące i jedną zakończoną z wpisem w historii medycznej).

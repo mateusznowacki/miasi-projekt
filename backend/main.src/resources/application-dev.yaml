@@ -1,0 +1,6 @@
+# Activate with: ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+# Seeds demo users, schedules, and visits on first startup (see DevDataSeeder).
+
+logging:
+  level:
+    pl.MiASI.bootstrap: INFO
