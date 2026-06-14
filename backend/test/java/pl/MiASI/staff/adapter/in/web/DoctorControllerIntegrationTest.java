@@ -1,4 +1,4 @@
-package pl.MiASI.staff.adapter.in.web;
+package pl.MiASI.staff.infrastructure.in.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +7,10 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.MiASI.iam.adapter.out.security.JwtTokenProvider;
+import pl.MiASI.iam.infrastructure.out.security.JwtTokenProvider;
 import pl.MiASI.staff.application.port.in.StaffUseCase;
-import pl.MiASI.staff.domain.model.StaffMember;
-import pl.MiASI.staff.domain.model.StaffRole;
+import pl.MiASI.staff.application.domain.model.StaffMember;
+import pl.MiASI.staff.application.domain.model.StaffRole;
 
 import java.util.List;
 import java.util.UUID;

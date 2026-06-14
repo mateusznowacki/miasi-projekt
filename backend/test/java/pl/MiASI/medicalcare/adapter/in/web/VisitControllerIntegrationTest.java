@@ -1,4 +1,4 @@
-package pl.MiASI.medicalcare.adapter.in.web;
+package pl.MiASI.medicalcare.infrastructure.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -9,18 +9,18 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.MiASI.iam.adapter.out.security.JwtTokenProvider;
+import pl.MiASI.iam.infrastructure.out.security.JwtTokenProvider;
 import pl.MiASI.medicalcare.application.port.in.ScheduleQueryUseCase;
 import pl.MiASI.medicalcare.application.port.in.VisitManagementUseCase;
 import pl.MiASI.medicalcare.application.port.in.VisitQueryUseCase;
-import pl.MiASI.medicalcare.domain.model.ConsultationType;
-import pl.MiASI.medicalcare.domain.model.Visit;
-import pl.MiASI.medicalcare.domain.model.VisitId;
-import pl.MiASI.medicalcare.domain.model.VisitStatus;
+import pl.MiASI.medicalcare.application.domain.model.ConsultationType;
+import pl.MiASI.medicalcare.application.domain.model.Visit;
+import pl.MiASI.medicalcare.application.domain.model.VisitId;
+import pl.MiASI.medicalcare.application.domain.model.VisitStatus;
 import pl.MiASI.patient.application.port.in.PatientUseCase;
-import pl.MiASI.patient.domain.model.Patient;
-import pl.MiASI.shared.domain.model.DoctorId;
-import pl.MiASI.shared.domain.model.PatientId;
+import pl.MiASI.patient.application.domain.model.Patient;
+import pl.MiASI.shared.application.domain.model.DoctorId;
+import pl.MiASI.shared.application.domain.model.PatientId;
 import pl.MiASI.staff.application.port.in.StaffUseCase;
 
 import java.util.List;

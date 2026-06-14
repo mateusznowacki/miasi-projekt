@@ -1,4 +1,4 @@
-package pl.MiASI.medicalcare.adapter.in.web;
+package pl.MiASI.medicalcare.infrastructure.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -9,17 +9,17 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.MiASI.iam.adapter.out.security.JwtTokenProvider;
+import pl.MiASI.iam.infrastructure.out.security.JwtTokenProvider;
 import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
 import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
 import pl.MiASI.medicalcare.application.port.in.ScheduleQueryUseCase;
-import pl.MiASI.medicalcare.domain.model.Schedule;
-import pl.MiASI.medicalcare.domain.model.ScheduleId;
-import pl.MiASI.medicalcare.domain.model.Slot;
-import pl.MiASI.medicalcare.domain.model.SlotId;
-import pl.MiASI.medicalcare.domain.model.SlotStatus;
-import pl.MiASI.medicalcare.domain.model.TimeRange;
-import pl.MiASI.shared.domain.model.DoctorId;
+import pl.MiASI.medicalcare.application.domain.model.Schedule;
+import pl.MiASI.medicalcare.application.domain.model.ScheduleId;
+import pl.MiASI.medicalcare.application.domain.model.Slot;
+import pl.MiASI.medicalcare.application.domain.model.SlotId;
+import pl.MiASI.medicalcare.application.domain.model.SlotStatus;
+import pl.MiASI.medicalcare.application.domain.model.TimeRange;
+import pl.MiASI.shared.application.domain.model.DoctorId;
 
 import java.time.LocalDateTime;
 import java.util.List;

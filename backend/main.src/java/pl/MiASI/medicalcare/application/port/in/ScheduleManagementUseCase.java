@@ -1,8 +1,8 @@
 package pl.MiASI.medicalcare.application.port.in;
 
-import pl.MiASI.medicalcare.domain.model.SlotId;
-import pl.MiASI.medicalcare.domain.model.TimeRange;
-import pl.MiASI.shared.domain.model.DoctorId;
+import pl.MiASI.medicalcare.application.domain.model.SlotId;
+import pl.MiASI.medicalcare.application.domain.model.TimeRange;
+import pl.MiASI.shared.application.domain.model.DoctorId;
 
 import java.util.List;
 

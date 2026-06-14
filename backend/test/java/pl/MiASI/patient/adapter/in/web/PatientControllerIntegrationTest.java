@@ -1,4 +1,4 @@
-package pl.MiASI.patient.adapter.in.web;
+package pl.MiASI.patient.infrastructure.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -9,12 +9,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.MiASI.iam.adapter.out.security.JwtTokenProvider;
+import pl.MiASI.iam.infrastructure.out.security.JwtTokenProvider;
 import pl.MiASI.patient.application.port.in.PatientUseCase;
-import pl.MiASI.shared.domain.model.PatientId;
-import pl.MiASI.shared.domain.model.DoctorId;
-import pl.MiASI.patient.domain.model.Patient;
-import pl.MiASI.patient.domain.model.MedicalRecord;
+import pl.MiASI.shared.application.domain.model.PatientId;
+import pl.MiASI.shared.application.domain.model.DoctorId;
+import pl.MiASI.patient.application.domain.model.Patient;
+import pl.MiASI.patient.application.domain.model.MedicalRecord;
 
 import java.util.List;
 import java.util.Optional;

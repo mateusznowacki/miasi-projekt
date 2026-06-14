@@ -3,7 +3,7 @@ package pl.MiASI.staff.application.port.in;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import pl.MiASI.staff.domain.model.StaffRole;
+import pl.MiASI.staff.application.domain.model.StaffRole;
 
 public record CreateStaffCommand(
         @NotNull(message = "Rola jest wymagana") StaffRole role,

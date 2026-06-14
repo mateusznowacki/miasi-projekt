@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
 import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
-import pl.MiASI.medicalcare.domain.event.SlotFreedEvent;
-import pl.MiASI.medicalcare.domain.model.Schedule;
-import pl.MiASI.medicalcare.domain.model.SlotId;
-import pl.MiASI.medicalcare.domain.model.TimeRange;
-import pl.MiASI.medicalcare.domain.repository.ScheduleRepository;
-import pl.MiASI.shared.domain.model.DoctorId;
+import pl.MiASI.medicalcare.application.domain.event.SlotFreedEvent;
+import pl.MiASI.medicalcare.application.domain.model.Schedule;
+import pl.MiASI.medicalcare.application.domain.model.SlotId;
+import pl.MiASI.medicalcare.application.domain.model.TimeRange;
+import pl.MiASI.medicalcare.application.port.out.ScheduleRepository;
+import pl.MiASI.shared.application.domain.model.DoctorId;
 
 import java.util.List;
 

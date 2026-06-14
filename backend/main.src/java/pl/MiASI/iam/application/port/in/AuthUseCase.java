@@ -1,7 +1,7 @@
 package pl.MiASI.iam.application.port.in;
 
-import pl.MiASI.iam.domain.model.AccountId;
-import pl.MiASI.iam.domain.model.Role;
+import pl.MiASI.iam.application.domain.model.AccountId;
+import pl.MiASI.iam.application.domain.model.Role;
 
 public interface AuthUseCase {
     AuthResult login(String email, String password);

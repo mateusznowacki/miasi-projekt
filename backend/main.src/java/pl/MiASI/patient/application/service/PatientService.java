@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.MiASI.iam.application.port.in.AuthUseCase;
-import pl.MiASI.iam.domain.model.Role;
+import pl.MiASI.iam.application.domain.model.Role;
 import pl.MiASI.patient.application.port.in.PatientUseCase;
-import pl.MiASI.patient.domain.model.MedicalRecord;
-import pl.MiASI.patient.domain.model.Patient;
-import pl.MiASI.patient.domain.repository.PatientRepository;
-import pl.MiASI.shared.domain.model.DoctorId;
-import pl.MiASI.shared.domain.model.PatientId;
+import pl.MiASI.patient.application.domain.model.MedicalRecord;
+import pl.MiASI.patient.application.domain.model.Patient;
+import pl.MiASI.patient.application.port.out.PatientRepository;
+import pl.MiASI.shared.application.domain.model.DoctorId;
+import pl.MiASI.shared.application.domain.model.PatientId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,7 +47,7 @@ public class PatientService implements PatientUseCase {
     @Override
     @Transactional
     public void updatePersonalData(PatientId id, String firstName, String lastName, String phone, String email, String address) {
-        authUseCase.updateEmail(new pl.MiASI.iam.domain.model.AccountId(id.value()), email);
+        authUseCase.updateEmail(new pl.MiASI.iam.application.domain.model.AccountId(id.value()), email);
         Patient patient = patientRepository.findById(id).orElseThrow();
         patient.updatePersonalData(firstName, lastName, phone, email, address);
         patientRepository.save(patient);
@@ -62,7 +62,7 @@ public class PatientService implements PatientUseCase {
         Patient patient = patientRepository.findById(id).orElseThrow();
         patient.addMedicalRecord(new MedicalRecord(UUID.randomUUID(), visitId, doctorId, diagnoses, symptoms, prescriptions, notes, testResults, LocalDateTime.now(), null, null));
         patientRepository.save(patient);
-        eventPublisher.publishEvent(new pl.MiASI.medicalcare.domain.event.RecordCreatedEvent(new pl.MiASI.medicalcare.domain.model.VisitId(visitId)));
+        eventPublisher.publishEvent(new pl.MiASI.medicalcare.application.domain.event.RecordCreatedEvent(new pl.MiASI.medicalcare.application.domain.model.VisitId(visitId)));
     }
 
     @Override

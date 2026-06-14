@@ -8,28 +8,28 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
 import pl.MiASI.iam.application.port.in.AuthUseCase;
-import pl.MiASI.iam.domain.model.Account;
-import pl.MiASI.iam.domain.model.AccountId;
-import pl.MiASI.iam.domain.repository.AccountRepository;
+import pl.MiASI.iam.application.domain.model.Account;
+import pl.MiASI.iam.application.domain.model.AccountId;
+import pl.MiASI.iam.application.port.out.AccountRepository;
 import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
 import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
 import pl.MiASI.medicalcare.application.port.in.ScheduleQueryUseCase;
 import pl.MiASI.medicalcare.application.port.in.VisitManagementUseCase;
 import pl.MiASI.medicalcare.application.port.in.VisitQueryUseCase;
-import pl.MiASI.medicalcare.domain.model.ConsultationType;
-import pl.MiASI.medicalcare.domain.model.Schedule;
-import pl.MiASI.medicalcare.domain.model.Slot;
-import pl.MiASI.medicalcare.domain.model.SlotStatus;
-import pl.MiASI.medicalcare.domain.model.Visit;
-import pl.MiASI.medicalcare.domain.model.VisitId;
-import pl.MiASI.medicalcare.domain.model.VisitStatus;
+import pl.MiASI.medicalcare.application.domain.model.ConsultationType;
+import pl.MiASI.medicalcare.application.domain.model.Schedule;
+import pl.MiASI.medicalcare.application.domain.model.Slot;
+import pl.MiASI.medicalcare.application.domain.model.SlotStatus;
+import pl.MiASI.medicalcare.application.domain.model.Visit;
+import pl.MiASI.medicalcare.application.domain.model.VisitId;
+import pl.MiASI.medicalcare.application.domain.model.VisitStatus;
 import pl.MiASI.patient.application.port.in.PatientUseCase;
-import pl.MiASI.patient.domain.model.Patient;
-import pl.MiASI.shared.domain.model.DoctorId;
-import pl.MiASI.shared.domain.model.PatientId;
+import pl.MiASI.patient.application.domain.model.Patient;
+import pl.MiASI.shared.application.domain.model.DoctorId;
+import pl.MiASI.shared.application.domain.model.PatientId;
 import pl.MiASI.staff.application.port.in.CreateStaffCommand;
 import pl.MiASI.staff.application.port.in.StaffUseCase;
-import pl.MiASI.staff.domain.model.StaffRole;
+import pl.MiASI.staff.application.domain.model.StaffRole;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -84,7 +84,7 @@ class DomainIntegrationTest {
         // 2. Dodanie harmonogramu dla lekarza
         LocalDateTime start = LocalDateTime.now().plusDays(1).withHour(10).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime end = start.plusMinutes(30);
-        AddSlotCommand addSlot = new AddSlotCommand(new pl.MiASI.medicalcare.domain.model.TimeRange(start, end), "Gabinet 101");
+        AddSlotCommand addSlot = new AddSlotCommand(new pl.MiASI.medicalcare.application.domain.model.TimeRange(start, end), "Gabinet 101");
         scheduleManagementUseCase.addTimeSlots(new DoctorId(doctorId), List.of(addSlot));
 
         // Pobierz id dodanego slotu
@@ -103,7 +103,7 @@ class DomainIntegrationTest {
         Optional<Account> account = accountRepository.findById(new AccountId(patientId.value()));
         assertTrue(account.isPresent());
         assertTrue(account.get().getEmail().startsWith("adam.nowak"));
-        assertEquals(pl.MiASI.iam.domain.model.Role.PATIENT, account.get().getRole());
+        assertEquals(pl.MiASI.iam.application.domain.model.Role.PATIENT, account.get().getRole());
     }
 
     @Test
@@ -112,7 +112,7 @@ class DomainIntegrationTest {
         Optional<Account> account = accountRepository.findById(new AccountId(doctorId));
         assertTrue(account.isPresent());
         assertTrue(account.get().getEmail().startsWith("jan.kowalski"));
-        assertEquals(pl.MiASI.iam.domain.model.Role.DOCTOR, account.get().getRole());
+        assertEquals(pl.MiASI.iam.application.domain.model.Role.DOCTOR, account.get().getRole());
     }
 
     @Test
@@ -127,7 +127,7 @@ class DomainIntegrationTest {
                 patientId,
                 new DoctorId(doctorId),
                 ConsultationType.GENERAL,
-                List.of(new pl.MiASI.medicalcare.domain.model.SlotId(slotId))
+                List.of(new pl.MiASI.medicalcare.application.domain.model.SlotId(slotId))
         );
 
         // Then
@@ -148,7 +148,7 @@ class DomainIntegrationTest {
                 patientId,
                 new DoctorId(doctorId),
                 ConsultationType.GENERAL,
-                List.of(new pl.MiASI.medicalcare.domain.model.SlotId(slotId))
+                List.of(new pl.MiASI.medicalcare.application.domain.model.SlotId(slotId))
         );
         Schedule scheduleAfterReserve = scheduleQueryUseCase.getScheduleByDoctor(new DoctorId(doctorId)).orElseThrow();
         assertEquals(SlotStatus.BOOKED, scheduleAfterReserve.slots().get(0).getStatus());
@@ -172,7 +172,7 @@ class DomainIntegrationTest {
                 patientId,
                 new DoctorId(doctorId),
                 ConsultationType.GENERAL,
-                List.of(new pl.MiASI.medicalcare.domain.model.SlotId(slotId))
+                List.of(new pl.MiASI.medicalcare.application.domain.model.SlotId(slotId))
         );
 
         // When

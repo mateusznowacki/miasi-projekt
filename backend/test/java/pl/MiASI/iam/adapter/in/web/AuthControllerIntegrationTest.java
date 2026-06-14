@@ -1,4 +1,4 @@
-package pl.MiASI.iam.adapter.in.web;
+package pl.MiASI.iam.infrastructure.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.MiASI.iam.application.port.in.AuthResult;
 import pl.MiASI.iam.application.port.in.AuthUseCase;
-import pl.MiASI.iam.adapter.out.security.JwtTokenProvider;
+import pl.MiASI.iam.infrastructure.out.security.JwtTokenProvider;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;

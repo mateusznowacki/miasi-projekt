@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 import pl.MiASI.iam.application.port.in.AuthUseCase;
-import pl.MiASI.patient.domain.model.Patient;
-import pl.MiASI.patient.domain.repository.PatientRepository;
-import pl.MiASI.shared.domain.model.PatientId;
+import pl.MiASI.patient.application.domain.model.Patient;
+import pl.MiASI.patient.application.port.out.PatientRepository;
+import pl.MiASI.shared.application.domain.model.PatientId;
 
 import java.util.List;
 import java.util.UUID;

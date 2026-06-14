@@ -1,7 +1,7 @@
 package pl.MiASI.staff.application.port.in;
 
-import pl.MiASI.staff.domain.model.StaffMember;
-import pl.MiASI.staff.domain.model.StaffRole;
+import pl.MiASI.staff.application.domain.model.StaffMember;
+import pl.MiASI.staff.application.domain.model.StaffRole;
 
 import java.util.List;
 import java.util.Optional;

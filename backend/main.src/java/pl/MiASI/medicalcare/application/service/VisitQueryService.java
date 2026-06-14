@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.MiASI.medicalcare.application.port.in.VisitQueryUseCase;
-import pl.MiASI.medicalcare.domain.model.Visit;
-import pl.MiASI.medicalcare.domain.repository.VisitRepository;
-import pl.MiASI.shared.domain.model.PatientId;
+import pl.MiASI.medicalcare.application.domain.model.Visit;
+import pl.MiASI.medicalcare.application.port.out.VisitRepository;
+import pl.MiASI.shared.application.domain.model.PatientId;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class VisitQueryService implements VisitQueryUseCase {
     }
 
     @Override
-    public List<Visit> getVisitsByDoctor(pl.MiASI.shared.domain.model.DoctorId doctorId) {
+    public List<Visit> getVisitsByDoctor(pl.MiASI.shared.application.domain.model.DoctorId doctorId) {
         return visitRepository.findByDoctorId(doctorId);
     }
 }

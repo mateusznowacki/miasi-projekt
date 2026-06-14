@@ -1,8 +1,8 @@
 package pl.MiASI.patient.application.port.in;
 
-import pl.MiASI.patient.domain.model.Patient;
-import pl.MiASI.shared.domain.model.DoctorId;
-import pl.MiASI.shared.domain.model.PatientId;
+import pl.MiASI.patient.application.domain.model.Patient;
+import pl.MiASI.shared.application.domain.model.DoctorId;
+import pl.MiASI.shared.application.domain.model.PatientId;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +19,7 @@ public interface PatientUseCase {
 
     Optional<Patient> getPatientProfile(PatientId id);
 
-    Optional<pl.MiASI.patient.domain.model.MedicalRecord> getMedicalRecordByVisitId(PatientId id, UUID visitId);
+    Optional<pl.MiASI.patient.application.domain.model.MedicalRecord> getMedicalRecordByVisitId(PatientId id, UUID visitId);
 
     List<Patient> listPatients();
 

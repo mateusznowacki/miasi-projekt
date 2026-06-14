@@ -5,14 +5,14 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.MiASI.medicalcare.application.port.in.VisitManagementUseCase;
-import pl.MiASI.medicalcare.domain.event.VisitCanceledEvent;
-import pl.MiASI.medicalcare.domain.event.VisitCompletedEvent;
-import pl.MiASI.medicalcare.domain.event.VisitReservedEvent;
-import pl.MiASI.medicalcare.domain.model.*;
-import pl.MiASI.medicalcare.domain.repository.ScheduleRepository;
-import pl.MiASI.medicalcare.domain.repository.VisitRepository;
-import pl.MiASI.shared.domain.model.DoctorId;
-import pl.MiASI.shared.domain.model.PatientId;
+import pl.MiASI.medicalcare.application.domain.event.VisitCanceledEvent;
+import pl.MiASI.medicalcare.application.domain.event.VisitCompletedEvent;
+import pl.MiASI.medicalcare.application.domain.event.VisitReservedEvent;
+import pl.MiASI.medicalcare.application.domain.model.*;
+import pl.MiASI.medicalcare.application.port.out.ScheduleRepository;
+import pl.MiASI.medicalcare.application.port.out.VisitRepository;
+import pl.MiASI.shared.application.domain.model.DoctorId;
+import pl.MiASI.shared.application.domain.model.PatientId;
 
 import java.util.List;
 

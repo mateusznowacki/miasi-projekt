@@ -1,4 +1,4 @@
-package pl.MiASI.staff.adapter.in.web;
+package pl.MiASI.staff.infrastructure.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -9,12 +9,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.MiASI.iam.adapter.out.security.JwtTokenProvider;
+import pl.MiASI.iam.infrastructure.out.security.JwtTokenProvider;
 import pl.MiASI.staff.application.port.in.CreateStaffCommand;
 import pl.MiASI.staff.application.port.in.StaffUseCase;
 import pl.MiASI.staff.application.port.in.UpdateStaffCommand;
-import pl.MiASI.staff.domain.model.StaffMember;
-import pl.MiASI.staff.domain.model.StaffRole;
+import pl.MiASI.staff.application.domain.model.StaffMember;
+import pl.MiASI.staff.application.domain.model.StaffRole;
 
 import java.util.List;
 import java.util.Optional;
