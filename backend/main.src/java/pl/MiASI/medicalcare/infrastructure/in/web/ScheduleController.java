@@ -3,11 +3,11 @@ package pl.MiASI.medicalcare.infrastructure.in.web;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.MiASI.medicalcare.application.domain.model.Schedule;
+import pl.MiASI.medicalcare.application.domain.model.SlotId;
 import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
 import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
 import pl.MiASI.medicalcare.application.port.in.ScheduleQueryUseCase;
-import pl.MiASI.medicalcare.application.domain.model.Schedule;
-import pl.MiASI.medicalcare.application.domain.model.SlotId;
 import pl.MiASI.shared.application.domain.model.DoctorId;
 
 import java.util.List;

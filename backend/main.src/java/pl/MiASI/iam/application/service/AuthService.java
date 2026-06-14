@@ -3,14 +3,15 @@ package pl.MiASI.iam.application.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.MiASI.iam.application.domain.model.Account;
+import pl.MiASI.iam.application.domain.model.AccountId;
+import pl.MiASI.iam.application.domain.model.Role;
 import pl.MiASI.iam.application.port.in.AuthResult;
 import pl.MiASI.iam.application.port.in.AuthUseCase;
+import pl.MiASI.iam.application.port.out.AccountRepository;
 import pl.MiASI.iam.application.port.out.PasswordEncoderPort;
 import pl.MiASI.iam.application.port.out.TokenProviderPort;
-import pl.MiASI.iam.application.domain.model.AccountId;
-import pl.MiASI.iam.application.domain.model.Account;
-import pl.MiASI.iam.application.domain.model.Role;
-import pl.MiASI.iam.application.port.out.AccountRepository;
+
 import java.util.Optional;
 
 @Service

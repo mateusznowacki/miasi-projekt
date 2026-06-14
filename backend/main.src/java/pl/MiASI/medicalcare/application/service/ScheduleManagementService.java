@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
-import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
 import pl.MiASI.medicalcare.application.domain.event.SlotFreedEvent;
 import pl.MiASI.medicalcare.application.domain.model.Schedule;
 import pl.MiASI.medicalcare.application.domain.model.SlotId;
 import pl.MiASI.medicalcare.application.domain.model.TimeRange;
+import pl.MiASI.medicalcare.application.port.in.AddSlotCommand;
+import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
 import pl.MiASI.medicalcare.application.port.out.ScheduleRepository;
 import pl.MiASI.shared.application.domain.model.DoctorId;
 

@@ -5,8 +5,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-import pl.MiASI.iam.application.port.out.TokenProviderPort;
 import pl.MiASI.iam.application.domain.model.Account;
+import pl.MiASI.iam.application.port.out.TokenProviderPort;
 
 import java.security.Key;
 import java.util.Date;

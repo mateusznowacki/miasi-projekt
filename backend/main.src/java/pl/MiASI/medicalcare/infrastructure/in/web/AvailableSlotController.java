@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.MiASI.medicalcare.application.port.in.ScheduleQueryUseCase;
 import pl.MiASI.medicalcare.application.domain.model.Schedule;
 import pl.MiASI.medicalcare.application.domain.model.Slot;
-import pl.MiASI.staff.application.port.in.StaffUseCase;
+import pl.MiASI.medicalcare.application.port.in.ScheduleQueryUseCase;
 import pl.MiASI.staff.application.domain.model.StaffMember;
 import pl.MiASI.staff.application.domain.model.StaffRole;
+import pl.MiASI.staff.application.port.in.StaffUseCase;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

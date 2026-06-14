@@ -3,14 +3,14 @@ package pl.MiASI.staff.application.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.MiASI.iam.application.port.in.AuthUseCase;
 import pl.MiASI.iam.application.domain.model.AccountId;
 import pl.MiASI.iam.application.domain.model.Role;
+import pl.MiASI.iam.application.port.in.AuthUseCase;
+import pl.MiASI.staff.application.domain.model.StaffMember;
+import pl.MiASI.staff.application.domain.model.StaffRole;
 import pl.MiASI.staff.application.port.in.CreateStaffCommand;
 import pl.MiASI.staff.application.port.in.StaffUseCase;
 import pl.MiASI.staff.application.port.in.UpdateStaffCommand;
-import pl.MiASI.staff.application.domain.model.StaffMember;
-import pl.MiASI.staff.application.domain.model.StaffRole;
 import pl.MiASI.staff.application.port.out.StaffRepository;
 
 import java.util.List;

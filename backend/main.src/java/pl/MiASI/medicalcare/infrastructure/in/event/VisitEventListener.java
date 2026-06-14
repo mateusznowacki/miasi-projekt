@@ -3,12 +3,10 @@ package pl.MiASI.medicalcare.infrastructure.in.event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
-import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
-import pl.MiASI.medicalcare.application.port.in.VisitManagementUseCase;
 import pl.MiASI.medicalcare.application.domain.event.RecordCreatedEvent;
 import pl.MiASI.medicalcare.application.domain.event.VisitCanceledEvent;
+import pl.MiASI.medicalcare.application.port.in.ScheduleManagementUseCase;
+import pl.MiASI.medicalcare.application.port.in.VisitManagementUseCase;
 import pl.MiASI.medicalcare.application.port.out.VisitRepository;
 
 @Component
